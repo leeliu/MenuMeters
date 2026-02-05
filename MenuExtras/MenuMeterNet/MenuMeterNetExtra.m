@@ -663,6 +663,10 @@
 	// Top network processes - pre-allocated items (mirrors CPU pattern)
 	netProcessInsertedItems = [NSMutableArray array];
 	{
+		NSMenuItem *sepItem = [NSMenuItem separatorItem];
+		[extraMenu addItem:sepItem];
+		sepItem.hidden = YES;
+		[netProcessInsertedItems addObject:sepItem];
 		NSMenuItem *headerItem = [extraMenu addItemWithTitle:@"Top Network Processes:" action:nil keyEquivalent:@""];
 		[headerItem setEnabled:NO];
 		headerItem.hidden = YES;
@@ -1255,10 +1259,12 @@
 			double totalB = [b[kNetProcessBytesInPerSecKey] doubleValue] + [b[kNetProcessBytesOutPerSecKey] doubleValue];
 			return [@(totalB) compare:@(totalA)];
 		}];
-		NSMenuItem *headerItem = netProcessInsertedItems[0];
+		NSMenuItem *sepItem = netProcessInsertedItems[0];
+		NSMenuItem *headerItem = netProcessInsertedItems[1];
+		sepItem.hidden = (topProcesses.count == 0);
 		headerItem.hidden = (topProcesses.count == 0);
 		for (NSInteger ndx = 0; ndx < kNetProcessCountMax; ndx++) {
-			NSMenuItem *mi = netProcessInsertedItems[ndx + 1];
+			NSMenuItem *mi = netProcessInsertedItems[ndx + 2];
 			if (ndx < (NSInteger)topProcesses.count) {
 				NSString *name = topProcesses[(NSUInteger)ndx][kNetProcessNameKey];
 				double inPerSec = [topProcesses[(NSUInteger)ndx][kNetProcessBytesInPerSecKey] doubleValue];

@@ -175,6 +175,8 @@
     menuItem.indentationLevel=1;
 	[menuItem setEnabled:NO];
 #endif
+	// Separator above top processes section
+	[extraMenu addItem:[NSMenuItem separatorItem]];
 	// Add top kCPUrocessCountMax most CPU intensive processes
 	menuItem = [extraMenu addItemWithTitle:[bundle localizedStringForKey:kProcessTitle value:nil table:nil]
 												  action:nil
@@ -321,6 +323,7 @@
 
     // Top CPU intensive processes
     NSArray* processes = ([ourPrefs cpuMaxProcessCount] > 0 ? [cpuTopProcesses runningProcessesByCPUUsage:[ourPrefs cpuMaxProcessCount]] : nil);
+    [extraMenu itemAtIndex:kCPUProcessLabelMenuIndex - 1].hidden = (processes == nil);
     LiveUpdateMenuItemTitleAndVisibility(extraMenu, kCPUProcessLabelMenuIndex, nil, (processes == nil));
     for (NSInteger ndx = 0; ndx < kCPUrocessCountMax; ++ndx) {
         if (ndx < processes.count) {

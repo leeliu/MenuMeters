@@ -140,21 +140,6 @@
     menuItem.indentationLevel=1;
 	[menuItem setEnabled:NO];
 
-	// Add VM stats menu items and placeholders
-	menuItem = (NSMenuItem *)[extraMenu addItemWithTitle:[bundle localizedStringForKey:kVMStatsTitle value:nil table:nil]
-												  action:nil
-										   keyEquivalent:@""];
-	[menuItem setEnabled:NO];
-	menuItem = (NSMenuItem *)[extraMenu addItemWithTitle:@"" action:nil keyEquivalent:@""];
-    menuItem.indentationLevel=1;
-	[menuItem setEnabled:NO];
-	menuItem = (NSMenuItem *)[extraMenu addItemWithTitle:@"" action:nil keyEquivalent:@""];
-    menuItem.indentationLevel=1;
-	[menuItem setEnabled:NO];
-	menuItem = (NSMenuItem *)[extraMenu addItemWithTitle:@"" action:nil keyEquivalent:@""];
-    menuItem.indentationLevel=1;
-	[menuItem setEnabled:NO];
-
         // add items for memory pressure
         menuItem = (NSMenuItem *)[extraMenu addItemWithTitle:[bundle localizedStringForKey:kMemPressureTitle value:nil table:nil]
                                                   action:nil
@@ -181,8 +166,16 @@
 
 	// Top memory processes (pre-allocated, hidden until data arrives)
 	memTopProcesses = [[MenuMeterMemTopProcesses alloc] init];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(processDataArrived:)
+												 name:kMemTopProcessesUpdatedNotification
+											   object:memTopProcesses];
 	memProcessMenuItems = [NSMutableArray array];
 	{
+		NSMenuItem *sepItem = [NSMenuItem separatorItem];
+		[extraMenu addItem:sepItem];
+		sepItem.hidden = YES;
+		[memProcessMenuItems addObject:sepItem];
 		NSMenuItem *headerItem = [extraMenu addItemWithTitle:@"Top Memory Processes:" action:nil keyEquivalent:@""];
 		[headerItem setEnabled:NO];
 		headerItem.hidden = YES;
@@ -344,28 +337,6 @@
 					[memFloatMBFormatter stringForObjectValue:[currentMemStats objectForKey:@"compressedmb"]],
 					[memFloatMBFormatter stringForObjectValue:[currentMemStats objectForKey:@"uncompressedmb"]]];
 	LiveUpdateMenuItemTitle(extraMenu, kMemCompressedInfoMenuIndex, title);
-	// VM paging
-	title = [NSString stringWithFormat:[localizedStrings objectForKey:kVMPagingFormat],
-					[prettyIntFormatter stringForObjectValue:[currentMemStats objectForKey:@"pageins"]],
-					[prettyIntFormatter stringForObjectValue:[currentMemStats objectForKey:@"pageouts"]]];
-	LiveUpdateMenuItemTitle(extraMenu, kMemVMPageInfoMenuIndex, title);
-	// VM cache
-	const double divisor = [[currentMemStats objectForKey:@"lookups"] doubleValue];
-	title = [NSString stringWithFormat:[localizedStrings objectForKey:kVMCacheFormat],
-					[prettyIntFormatter stringForObjectValue:[currentMemStats objectForKey:@"lookups"]],
-					[prettyIntFormatter stringForObjectValue:[currentMemStats objectForKey:@"hits"]],
-					[percentFormatter stringForObjectValue:
-						[NSNumber numberWithDouble:
-                            divisor == 0.0 ? 0.0 :
-                            (double)(([[currentMemStats objectForKey:@"hits"] doubleValue] /
-									  divisor) * 100.0)]]];
-	LiveUpdateMenuItemTitle(extraMenu, kMemVMCacheInfoMenuIndex, title);
-	// VM fault
-	title = [NSString stringWithFormat:[localizedStrings objectForKey:kVMFaultCopyOnWriteFormat],
-					[prettyIntFormatter stringForObjectValue:[currentMemStats objectForKey:@"faults"]],
-					[prettyIntFormatter stringForObjectValue:[currentMemStats objectForKey:@"cowfaults"]]];
-	LiveUpdateMenuItemTitle(extraMenu, kMemVMFaultInfoMenuIndex, title);
-    
         title=[NSString stringWithFormat:[localizedStrings objectForKey:kMemPressureFormat],[currentMemStats objectForKey:@"mempress"],[currentMemStats objectForKey:@"mempresslevel"]];
         LiveUpdateMenuItemTitle(extraMenu, kMemMemPressureInfoMenuIndex, title);
     
@@ -849,9 +820,7 @@
 
 - (void)menuWillOpen:(NSMenu *)menu {
 	[memTopProcesses startUpdateProcessList];
-	// Update process items immediately so they show on first open
-	[self updateProcessMenuItems];
-	// Start a 5s timer for live process updates while menu is open
+	// Process data arrives async - processRefreshTimer will pick it up
 	processRefreshTimer = [NSTimer timerWithTimeInterval:2.0
 												 target:self
 											   selector:@selector(processRefreshFired)
@@ -873,12 +842,21 @@
 	LiveUpdateMenu(extraMenu);
 }
 
+- (void)processDataArrived:(NSNotification *)notification {
+	if (self.isMenuVisible) {
+		[self updateProcessMenuItems];
+		LiveUpdateMenu(extraMenu);
+	}
+}
+
 - (void)updateProcessMenuItems {
 	NSArray *topProcesses = [memTopProcesses runningProcessesByMemUsage:kMemProcessCountDefault];
-	NSMenuItem *headerItem = memProcessMenuItems[0];
+	NSMenuItem *sepItem = memProcessMenuItems[0];
+	NSMenuItem *headerItem = memProcessMenuItems[1];
+	sepItem.hidden = (topProcesses.count == 0);
 	headerItem.hidden = (topProcesses.count == 0);
 	for (NSInteger ndx = 0; ndx < kMemProcessCountMax; ndx++) {
-		NSMenuItem *mi = memProcessMenuItems[ndx + 1];
+		NSMenuItem *mi = memProcessMenuItems[ndx + 2];
 		if (ndx < (NSInteger)topProcesses.count) {
 			NSString *name = topProcesses[(NSUInteger)ndx][kMemProcessNameKey];
 			double memBytes = [topProcesses[(NSUInteger)ndx][kMemProcessMemBytesKey] doubleValue];

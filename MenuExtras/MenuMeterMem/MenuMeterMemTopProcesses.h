@@ -9,6 +9,7 @@
 extern NSString* const kMemProcessPIDKey;
 extern NSString* const kMemProcessNameKey;
 extern NSString* const kMemProcessMemBytesKey;
+extern NSString* const kMemTopProcessesUpdatedNotification;
 
 @interface MenuMeterMemTopProcesses : NSObject
 

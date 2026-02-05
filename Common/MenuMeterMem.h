@@ -41,17 +41,14 @@
 #define kMemActiveWiredInfoMenuIndex		3
 #define kMemInactiveFreeInfoMenuIndex		4
 #define kMemCompressedInfoMenuIndex			5
-#define kMemVMPageInfoMenuIndex				7
-#define kMemVMCacheInfoMenuIndex			8
-#define kMemVMFaultInfoMenuIndex			9
-#define kMemMemPressureInfoMenuIndex                    11
-#define kMemSwapCountInfoMenuIndex			13
-#define kMemSwapMaxCountInfoMenuIndex		14
-#define kMemSwapSizeInfoMenuIndex			15
+#define kMemMemPressureInfoMenuIndex                    7
+#define kMemSwapCountInfoMenuIndex			9
+#define kMemSwapMaxCountInfoMenuIndex		10
+#define kMemSwapSizeInfoMenuIndex			11
 
 // Top processes
 #define kMemProcessCountMax					10
-#define kMemProcessCountDefault				5
+#define kMemProcessCountDefault				10
 
 ///////////////////////////////////////////////////////////////
 //
