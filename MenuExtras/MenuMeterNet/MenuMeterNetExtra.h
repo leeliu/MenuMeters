@@ -30,6 +30,7 @@
 #import "MenuMeterNetStats.h"
 #import "MenuMeterNetPPP.h"
 #import "MenuMeterWorkarounds.h"
+#import "MenuMeterNetTopProcesses.h"
 
 
 @interface MenuMeterNetExtra : NSMenuExtra {
@@ -57,6 +58,10 @@
 	// Cached dictionary of menu items that can be updated
 	NSMutableDictionary				*updateMenuItems;
 	NSFont							*throughputFont;
+	NSFont							*throughputUnitFont;
+	// Top network processes
+	MenuMeterNetTopProcesses		*netTopProcesses;
+	NSMutableArray					*netProcessInsertedItems;
 
 } // MenuMeterNetExtra
 

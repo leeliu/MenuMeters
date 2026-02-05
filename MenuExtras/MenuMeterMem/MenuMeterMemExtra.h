@@ -28,6 +28,7 @@
 #import "MenuMeterMem.h"
 #import "MenuMeterMemStats.h"
 #import "MenuMeterWorkarounds.h"
+#import "MenuMeterMemTopProcesses.h"
 
 
 @interface MenuMeterMemExtra : NSMenuExtra  {
@@ -56,6 +57,10 @@
 	NSDictionary					*currentSwapStats;
 	// Theme support
 	NSColor							*fgMenuThemeColor;
+	// Top processes
+	MenuMeterMemTopProcesses		*memTopProcesses;
+	NSMutableArray					*memProcessMenuItems;
+	NSTimer							*processRefreshTimer;
 
 } // MenuMeterMemExtra
 

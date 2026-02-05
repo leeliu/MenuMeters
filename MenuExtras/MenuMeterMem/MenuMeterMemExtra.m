@@ -34,6 +34,7 @@
 
 // Menu generation
 - (void)updateMenuContent;
+- (void)updateProcessMenuItems;
 
 // Timer callbacks
 - (void)updateMenuWhenDown;
@@ -177,6 +178,24 @@
 	menuItem = (NSMenuItem *)[extraMenu addItemWithTitle:@"" action:nil keyEquivalent:@""];
     menuItem.indentationLevel=1;
 	[menuItem setEnabled:NO];
+
+	// Top memory processes (pre-allocated, hidden until data arrives)
+	memTopProcesses = [[MenuMeterMemTopProcesses alloc] init];
+	memProcessMenuItems = [NSMutableArray array];
+	{
+		NSMenuItem *headerItem = [extraMenu addItemWithTitle:@"Top Memory Processes:" action:nil keyEquivalent:@""];
+		[headerItem setEnabled:NO];
+		headerItem.hidden = YES;
+		[memProcessMenuItems addObject:headerItem];
+		for (NSInteger i = 0; i < kMemProcessCountMax; i++) {
+			NSMenuItem *item = [extraMenu addItemWithTitle:@"" action:nil keyEquivalent:@""];
+			item.indentationLevel = 1;
+			[item setEnabled:NO];
+			item.hidden = YES;
+			[memProcessMenuItems addObject:item];
+		}
+	}
+
     [extraMenu addItem:[NSMenuItem separatorItem]];
     [self addStandardMenuEntriesTo:extraMenu];
 
@@ -484,25 +503,21 @@
 	if (freeMB < 0) freeMB = 0;
 	if (usedMB < 0) usedMB = 0;
 
+	double freeGB = freeMB / 1024.0;
+	double usedGB = usedMB / 1024.0;
 
-	// Construct strings
-	NSAttributedString *renderUString = [[NSAttributedString alloc]
-													initWithString:[NSString stringWithFormat:@"%.0f%@",
-																		usedMB,
-																		[localizedStrings objectForKey:kMBLabel]]
-														attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                    [NSFont monospacedDigitSystemFontOfSize:9.5f weight:NSFontWeightRegular], NSFontAttributeName,
-																		usedColor, NSForegroundColorAttributeName,
-																		nil]];
+	// Construct strings with smaller unit suffix
+	NSFont *numFont = [NSFont monospacedDigitSystemFontOfSize:9.5f weight:NSFontWeightRegular];
+	NSFont *unitFont = [NSFont monospacedDigitSystemFontOfSize:8.0f weight:NSFontWeightRegular];
+	NSString *uStr = [NSString stringWithFormat:@"%.1fGB", usedGB];
+	NSMutableAttributedString *renderUString = [[NSMutableAttributedString alloc]
+		initWithString:uStr attributes:@{NSFontAttributeName: numFont, NSForegroundColorAttributeName: usedColor}];
+	[renderUString addAttribute:NSFontAttributeName value:unitFont range:NSMakeRange(uStr.length - 2, 2)];
 	// Construct and draw the free string
-	NSAttributedString *renderFString = [[NSAttributedString alloc]
-													initWithString:[NSString stringWithFormat:@"%.0f%@",
-																		freeMB,
-																		[localizedStrings objectForKey:kMBLabel]]
-														attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                    [NSFont monospacedDigitSystemFontOfSize:9.5f weight:NSFontWeightRegular], NSFontAttributeName,
-																		freeColor, NSForegroundColorAttributeName,
-																		nil]];
+	NSString *fStr = [NSString stringWithFormat:@"%.1fGB", freeGB];
+	NSMutableAttributedString *renderFString = [[NSMutableAttributedString alloc]
+		initWithString:fStr attributes:@{NSFontAttributeName: numFont, NSForegroundColorAttributeName: freeColor}];
+	[renderFString addAttribute:NSFontAttributeName value:unitFont range:NSMakeRange(fStr.length - 2, 2)];
 
 	// Draw the prerendered label
 	if ([ourPrefs memUsedFreeLabel]) {
@@ -818,10 +833,85 @@
 	// Update the menu content
 	[self updateMenuContent];
 
+	// Update top memory processes
+	[self updateProcessMenuItems];
+
 	// Force the menu to redraw
 	LiveUpdateMenu(extraMenu);
 
 } // updateMenuWhenDown
+
+///////////////////////////////////////////////////////////////
+//
+//	NSMenuDelegate
+//
+///////////////////////////////////////////////////////////////
+
+- (void)menuWillOpen:(NSMenu *)menu {
+	[memTopProcesses startUpdateProcessList];
+	// Update process items immediately so they show on first open
+	[self updateProcessMenuItems];
+	// Start a 5s timer for live process updates while menu is open
+	processRefreshTimer = [NSTimer timerWithTimeInterval:2.0
+												 target:self
+											   selector:@selector(processRefreshFired)
+											   userInfo:nil
+												repeats:YES];
+	[[NSRunLoop mainRunLoop] addTimer:processRefreshTimer forMode:NSRunLoopCommonModes];
+	[super menuWillOpen:menu];
+}
+
+- (void)menuDidClose:(NSMenu *)menu {
+	[memTopProcesses stopUpdateProcessList];
+	[processRefreshTimer invalidate];
+	processRefreshTimer = nil;
+	[super menuDidClose:menu];
+}
+
+- (void)processRefreshFired {
+	[self updateProcessMenuItems];
+	LiveUpdateMenu(extraMenu);
+}
+
+- (void)updateProcessMenuItems {
+	NSArray *topProcesses = [memTopProcesses runningProcessesByMemUsage:kMemProcessCountDefault];
+	NSMenuItem *headerItem = memProcessMenuItems[0];
+	headerItem.hidden = (topProcesses.count == 0);
+	for (NSInteger ndx = 0; ndx < kMemProcessCountMax; ndx++) {
+		NSMenuItem *mi = memProcessMenuItems[ndx + 1];
+		if (ndx < (NSInteger)topProcesses.count) {
+			NSString *name = topProcesses[(NSUInteger)ndx][kMemProcessNameKey];
+			double memBytes = [topProcesses[(NSUInteger)ndx][kMemProcessMemBytesKey] doubleValue];
+			NSString *memStr;
+			if (memBytes >= 1073741824.0) {
+				memStr = [NSString stringWithFormat:@"%.1f GB", memBytes / 1073741824.0];
+			} else {
+				memStr = [NSString stringWithFormat:@"%.0f MB", memBytes / 1048576.0];
+			}
+			NSString *title = [NSString stringWithFormat:@"%@  %@", name, memStr];
+			mi.title = title;
+			mi.hidden = NO;
+
+			NSNumber *pid = topProcesses[(NSUInteger)ndx][kMemProcessPIDKey];
+			NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid.intValue];
+			NSImage *icon = app.icon;
+			if (!icon) {
+				static NSImage *defaultIcon = nil;
+				if (!defaultIcon) {
+					defaultIcon = [[NSWorkspace sharedWorkspace] iconForFile:@"/bin/bash"];
+				}
+				icon = defaultIcon;
+			}
+			icon = [icon copy];
+			icon.size = NSMakeSize(16, 16);
+			mi.image = icon;
+		} else {
+			mi.title = @"";
+			mi.hidden = YES;
+			mi.image = nil;
+		}
+	}
+}
 
 ///////////////////////////////////////////////////////////////
 //
@@ -873,11 +963,11 @@
 #endif
 
     [self setupColor:nil];
-	// Figure out the length of "MB" localization
+	// Figure out the length of "GB" label
 	float mbLength = 0;
 	if ([ourPrefs memDisplayMode] == kMemDisplayNumber) {
 		NSAttributedString *renderMBString =  [[NSAttributedString alloc]
-													initWithString:[localizedStrings objectForKey:kMBLabel]
+													initWithString:@"GB"
 														attributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                     [NSFont monospacedDigitSystemFontOfSize:9.5f weight:NSFontWeightRegular], NSFontAttributeName,
 																		nil]];
@@ -894,17 +984,8 @@
 			menuWidth = kMemPieDisplayWidth;
 			break;
 		case kMemDisplayNumber:
-			// Read in the total RAM, and change length to accomodate those with more RAM
-			if ([[[memStats memStats] objectForKey:@"totalmb"] unsignedLongLongValue] >= 10000) {
-				menuWidth = kMemNumberDisplayExtraLongWidth + mbLength;
-				textWidth = kMemNumberDisplayExtraLongWidth + mbLength;
-			} else if ([[[memStats memStats] objectForKey:@"totalmb"] unsignedLongLongValue] >= 1000) {
-				menuWidth = kMemNumberDisplayLongWidth + mbLength;
-				textWidth = kMemNumberDisplayLongWidth + mbLength;
-			} else {
-				menuWidth = kMemNumberDisplayShortWidth + mbLength;
-				textWidth = kMemNumberDisplayShortWidth + mbLength;
-			}
+			menuWidth = kMemNumberDisplayLongWidth + mbLength;
+			textWidth = kMemNumberDisplayLongWidth + mbLength;
 			if ([ourPrefs memUsedFreeLabel]) {
 				menuWidth += ceil(numberLabelWidth);
 				textWidth += ceil(numberLabelWidth);

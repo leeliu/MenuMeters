@@ -49,6 +49,10 @@
 #define kMemSwapMaxCountInfoMenuIndex		14
 #define kMemSwapSizeInfoMenuIndex			15
 
+// Top processes
+#define kMemProcessCountMax					10
+#define kMemProcessCountDefault				5
+
 ///////////////////////////////////////////////////////////////
 //
 //	Preference information

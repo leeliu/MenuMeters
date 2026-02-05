@@ -31,7 +31,11 @@
 // Widths of the various displays
 #define kNetArrowDisplayWidth				13
 // #define kNetNumberDisplayGapWidth			2
-#define kNetDisplayGapWidth					2
+#define kNetDisplayGapWidth					0
+
+// Top network processes
+#define kNetProcessCountMax					10
+#define kNetProcessCountDefault				5
 
 // String for primary interface selection (primary interface)
 #define kNetPrimaryInterface				@"primary"

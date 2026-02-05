@@ -108,14 +108,14 @@
 #define kKbpsLabel						@"Kbps"
 #define kMbpsLabel						@"Mbps"
 #define kGbpsLabel						@"Gbps"
-#define kBitPerSecondLabel				@"b/s"
-#define kKbPerSecondLabel				@"Kb/s"
-#define kMbPerSecondLabel				@"Mb/s"
-#define kGbPerSecondLabel				@"Gb/s"
-#define kBytePerSecondLabel				@"B/s"
-#define kKBPerSecondLabel				@"KB/s"
-#define kMBPerSecondLabel				@"MB/s"
-#define kGBPerSecondLabel				@"GB/s"
+#define kBitPerSecondLabel				@"b"
+#define kKbPerSecondLabel				@"Kb"
+#define kMbPerSecondLabel				@"Mb"
+#define kGbPerSecondLabel				@"Gb"
+#define kBytePerSecondLabel				@"B"
+#define kKBPerSecondLabel				@"KB"
+#define kMBPerSecondLabel				@"MB"
+#define kGBPerSecondLabel				@"GB"
 #define kPPPNoConnectTitle				@"Not Connected"
 #define kPPPConnectingTitle				@"Connecting..."
 #define kPPPConnectedTitle				@"Connected"
@@ -151,7 +151,8 @@
 	pppControl = [MenuMeterNetPPP sharedPPP];
 	netHistoryData = [NSMutableArray array];
 	netHistoryIntervals = [NSMutableArray array];
-	if (!(netConfig && netStats && pppControl && netHistoryData)) {
+	netTopProcesses = [[MenuMeterNetTopProcesses alloc] init];
+	if (!(netConfig && netStats && pppControl && netHistoryData && netTopProcesses)) {
 		NSLog(@"MenuMeterNet unable to load data gatherers/controllers. Abort.");
 		return nil;
 	}
@@ -169,6 +170,7 @@
 	// Set the menu extra view up
 
     throughputFont = [NSFont monospacedDigitSystemFontOfSize:9.5f weight:NSFontWeightRegular];
+    throughputUnitFont = [NSFont monospacedDigitSystemFontOfSize:8.0f weight:NSFontWeightRegular];
 
 
 	// Set up a NumberFormatter for localization. This is based on code contributed by Mike Fischer
@@ -266,7 +268,10 @@
 					isActiveInterface = NO;
 				}
 			}
-			
+
+			// Skip inactive interfaces
+			if (!isActiveInterface) continue;
+
             // Calc speed
 			if ([details objectForKey:@"linkspeed"] && isActiveInterface) {
 				if ([[details objectForKey:@"linkspeed"] doubleValue] < 0) {
@@ -462,24 +467,22 @@
 													 keyEquivalent:@""];
 					[item setEnabled:NO];
 					[item setIndentationLevel:1];
-					NSMenuItem *throughputItem = [extraMenu addItemWithTitle:[NSString stringWithFormat:@"%@ %@",
-																			  [localizedStrings objectForKey:kTxLabel],
-																			  [self throughputStringForBytes:[throughputOutNumber doubleValue]
+					NSMenuItem *throughputItem = [extraMenu addItemWithTitle:[NSString stringWithFormat:@"\u2193 %@",
+																			  [self throughputStringForBytes:[throughputInNumber doubleValue]
 																								  inInterval:[sampleIntervalNum doubleValue]]]
 																	  action:nil
 															   keyEquivalent:@""];
 					[throughputItem setEnabled:NO];
 					[throughputItem setIndentationLevel:2];
-					[interfaceUpdateMenuItems setObject:throughputItem forKey:@"deltaoutitem"];
-					throughputItem = [extraMenu addItemWithTitle:[NSString stringWithFormat:@"%@ %@",
-																  [localizedStrings objectForKey:kRxLabel],
-																  [self throughputStringForBytes:[throughputInNumber doubleValue]
+					[interfaceUpdateMenuItems setObject:throughputItem forKey:@"deltainitem"];
+					throughputItem = [extraMenu addItemWithTitle:[NSString stringWithFormat:@"\u2191 %@",
+																  [self throughputStringForBytes:[throughputOutNumber doubleValue]
 																					  inInterval:[sampleIntervalNum doubleValue]]]
 														  action:nil
 												   keyEquivalent:@""];
 					[throughputItem setEnabled:NO];
 					[throughputItem setIndentationLevel:2];
-					[interfaceUpdateMenuItems setObject:throughputItem forKey:@"deltainitem"];
+					[interfaceUpdateMenuItems setObject:throughputItem forKey:@"deltaoutitem"];
 				}
 				// Add peak throughput
 				NSNumber *peakNumber = [throughputDetails objectForKey:@"peak"];
@@ -505,20 +508,20 @@
 													 keyEquivalent:@""];
 					[item setEnabled:NO];
 					[item setIndentationLevel:1];
-					NSMenuItem *totalItem = [extraMenu addItemWithTitle:[self trafficStringForNumber:throughputOutNumber
-																						   withLabel:[localizedStrings objectForKey:kTxLabel]]
+					NSMenuItem *totalItem = [extraMenu addItemWithTitle:[self trafficStringForNumber:throughputInNumber
+																						   withLabel:@"\u2193"]
 																 action:nil
 														  keyEquivalent:@""];
 					[totalItem setEnabled:NO];
 					[totalItem setIndentationLevel:2];
-					[interfaceUpdateMenuItems setObject:totalItem forKey:@"totaloutitem"];
-					totalItem = [extraMenu addItemWithTitle:[self trafficStringForNumber:throughputInNumber
-																			   withLabel:[localizedStrings objectForKey:kRxLabel]]
+					[interfaceUpdateMenuItems setObject:totalItem forKey:@"totalinitem"];
+					totalItem = [extraMenu addItemWithTitle:[self trafficStringForNumber:throughputOutNumber
+																			   withLabel:@"\u2191"]
 													 action:nil
 											  keyEquivalent:@""];
 					[totalItem setEnabled:NO];
 					[totalItem setIndentationLevel:2];
-					[interfaceUpdateMenuItems setObject:totalItem forKey:@"totalinitem"];
+					[interfaceUpdateMenuItems setObject:totalItem forKey:@"totaloutitem"];
 				}
 				// Store the name to use in throughput reads for items we will update later
 				[interfaceUpdateMenuItems setObject:throughputInterface forKey:@"throughinterface"];
@@ -657,6 +660,22 @@
 					   keyEquivalent:@""] setEnabled:NO];
 	}
 
+	// Top network processes - pre-allocated items (mirrors CPU pattern)
+	netProcessInsertedItems = [NSMutableArray array];
+	{
+		NSMenuItem *headerItem = [extraMenu addItemWithTitle:@"Top Network Processes:" action:nil keyEquivalent:@""];
+		[headerItem setEnabled:NO];
+		headerItem.hidden = YES;
+		[netProcessInsertedItems addObject:headerItem];
+		for (NSInteger i = 0; i < kNetProcessCountMax; i++) {
+			NSMenuItem *item = [extraMenu addItemWithTitle:@"" action:nil keyEquivalent:@""];
+			item.indentationLevel = 1;
+			[item setEnabled:NO];
+			item.hidden = YES;
+			[netProcessInsertedItems addObject:item];
+		}
+	}
+
 	// Add utility items
 	[extraMenu addItem:[NSMenuItem separatorItem]];
 	[[extraMenu addItemWithTitle:[localizedStrings objectForKey:kOpenNetworkUtilityTitle]
@@ -677,6 +696,22 @@
 	return extraMenu;
 
 } // menu
+
+///////////////////////////////////////////////////////////////
+//
+//	NSMenuDelegate
+//
+///////////////////////////////////////////////////////////////
+
+- (void)menuWillOpen:(NSMenu *)menu {
+	[netTopProcesses startUpdateProcessList];
+	[super menuWillOpen:menu];
+}
+
+- (void)menuDidClose:(NSMenu *)menu {
+	[netTopProcesses stopUpdateProcessList];
+	[super menuDidClose:menu];
+}
 
 ///////////////////////////////////////////////////////////////
 //
@@ -995,22 +1030,25 @@
 	
 	NSString *txString = [self menubarThroughputStringForBytes:txValue inInterval:sampleInterval];
 	NSString *rxString = [self menubarThroughputStringForBytes:rxValue inInterval:sampleInterval];
-	NSAttributedString *renderTxString = [[NSAttributedString alloc]
-												initWithString:txString
-													attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-																	throughputFont,
-																	NSFontAttributeName,
-																	interfaceUp ? txColor : inactiveColor,
-																	NSForegroundColorAttributeName,
-																	nil]];
-	NSAttributedString *renderRxString = [[NSAttributedString alloc]
-												initWithString:rxString
-													attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-																	throughputFont,
-																	NSFontAttributeName,
-																	interfaceUp ? rxColor : inactiveColor,
-																	NSForegroundColorAttributeName,
-																	nil]];
+	// Find where the unit suffix starts (first letter character)
+	NSUInteger txUnitStart = txString.length;
+	for (NSUInteger i = 0; i < txString.length; i++) {
+		unichar c = [txString characterAtIndex:i];
+		if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) { txUnitStart = i; break; }
+	}
+	NSUInteger rxUnitStart = rxString.length;
+	for (NSUInteger i = 0; i < rxString.length; i++) {
+		unichar c = [rxString characterAtIndex:i];
+		if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) { rxUnitStart = i; break; }
+	}
+	NSColor *txDrawColor = interfaceUp ? txColor : inactiveColor;
+	NSColor *rxDrawColor = interfaceUp ? rxColor : inactiveColor;
+	NSMutableAttributedString *renderTxString = [[NSMutableAttributedString alloc] initWithString:txString
+		attributes:@{NSFontAttributeName: throughputFont, NSForegroundColorAttributeName: txDrawColor}];
+	[renderTxString addAttribute:NSFontAttributeName value:throughputUnitFont range:NSMakeRange(txUnitStart, txString.length - txUnitStart)];
+	NSMutableAttributedString *renderRxString = [[NSMutableAttributedString alloc] initWithString:rxString
+		attributes:@{NSFontAttributeName: throughputFont, NSForegroundColorAttributeName: rxDrawColor}];
+	[renderRxString addAttribute:NSFontAttributeName value:throughputUnitFont range:NSMakeRange(rxUnitStart, rxString.length - rxUnitStart)];
 
 	// Draw
 	// Draw label if needed
@@ -1165,31 +1203,21 @@
 			NSDictionary *throughputDetails = [[netHistoryData lastObject] objectForKey:[updateInfoForService objectForKey:@"throughinterface"]];
 			if (throughputDetails && sampleIntervalNum) {
 				// Update for this interface
-				NSMenuItem *targetItem = [updateInfoForService objectForKey:@"deltaoutitem"];
-				NSNumber *throughputNumber = [throughputDetails objectForKey:@"deltaout"];
+				NSMenuItem *targetItem = [updateInfoForService objectForKey:@"deltainitem"];
+				NSNumber *throughputNumber = [throughputDetails objectForKey:@"deltain"];
 				if (targetItem && throughputNumber) {
 					LiveUpdateMenuItemTitle(extraMenu,
 											[extraMenu indexOfItem:targetItem],
-											[NSString stringWithFormat:@"%@ %@",
-													[localizedStrings objectForKey:kTxLabel],
+											[NSString stringWithFormat:@"\u2193 %@",
 													[self throughputStringForBytes:[throughputNumber doubleValue] inInterval:[sampleIntervalNum doubleValue]]]);
 				}
-				targetItem = [updateInfoForService objectForKey:@"deltainitem"];
-				throughputNumber = [throughputDetails objectForKey:@"deltain"];
+				targetItem = [updateInfoForService objectForKey:@"deltaoutitem"];
+				throughputNumber = [throughputDetails objectForKey:@"deltaout"];
 				if (targetItem && throughputNumber) {
 					LiveUpdateMenuItemTitle(extraMenu,
 											[extraMenu indexOfItem:targetItem],
-											[NSString stringWithFormat:@"%@ %@",
-													[localizedStrings objectForKey:kRxLabel],
+											[NSString stringWithFormat:@"\u2191 %@",
 													[self throughputStringForBytes:[throughputNumber doubleValue] inInterval:[sampleIntervalNum doubleValue]]]);
-				}
-				targetItem = [updateInfoForService objectForKey:@"totaloutitem"];
-				throughputNumber = [throughputDetails objectForKey:@"totalout"];
-				if (targetItem && throughputNumber) {
-					LiveUpdateMenuItemTitle(extraMenu,
-											[extraMenu indexOfItem:targetItem],
-											[self trafficStringForNumber:throughputNumber
-															   withLabel:[localizedStrings objectForKey:kTxLabel]]);
 				}
 				targetItem = [updateInfoForService objectForKey:@"totalinitem"];
 				throughputNumber = [throughputDetails objectForKey:@"totalin"];
@@ -1197,7 +1225,15 @@
 					LiveUpdateMenuItemTitle(extraMenu,
 											[extraMenu indexOfItem:targetItem],
 											[self trafficStringForNumber:throughputNumber
-															   withLabel:[localizedStrings objectForKey:kRxLabel]]);
+															   withLabel:@"\u2193"]);
+				}
+				targetItem = [updateInfoForService objectForKey:@"totaloutitem"];
+				throughputNumber = [throughputDetails objectForKey:@"totalout"];
+				if (targetItem && throughputNumber) {
+					LiveUpdateMenuItemTitle(extraMenu,
+											[extraMenu indexOfItem:targetItem],
+											[self trafficStringForNumber:throughputNumber
+															   withLabel:@"\u2191"]);
 				}
 				targetItem = [updateInfoForService objectForKey:@"peakitem"];
 				throughputNumber = [throughputDetails objectForKey:@"peak"];
@@ -1210,10 +1246,55 @@
 		}
 	} // end details loop
 
+	// Update top network processes (mirrors CPU pattern exactly)
+	{
+		NSArray *topProcesses = [netTopProcesses runningProcessesByNetUsage:kNetProcessCountDefault];
+		// Sort by highest total download + upload
+		topProcesses = [topProcesses sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *a, NSDictionary *b) {
+			double totalA = [a[kNetProcessBytesInPerSecKey] doubleValue] + [a[kNetProcessBytesOutPerSecKey] doubleValue];
+			double totalB = [b[kNetProcessBytesInPerSecKey] doubleValue] + [b[kNetProcessBytesOutPerSecKey] doubleValue];
+			return [@(totalB) compare:@(totalA)];
+		}];
+		NSMenuItem *headerItem = netProcessInsertedItems[0];
+		headerItem.hidden = (topProcesses.count == 0);
+		for (NSInteger ndx = 0; ndx < kNetProcessCountMax; ndx++) {
+			NSMenuItem *mi = netProcessInsertedItems[ndx + 1];
+			if (ndx < (NSInteger)topProcesses.count) {
+				NSString *name = topProcesses[(NSUInteger)ndx][kNetProcessNameKey];
+				double inPerSec = [topProcesses[(NSUInteger)ndx][kNetProcessBytesInPerSecKey] doubleValue];
+				double outPerSec = [topProcesses[(NSUInteger)ndx][kNetProcessBytesOutPerSecKey] doubleValue];
+				NSString *inStr = [self throughputStringForBytesPerSecond:inPerSec withSpace:YES];
+				NSString *outStr = [self throughputStringForBytesPerSecond:outPerSec withSpace:YES];
+				NSString *title = [NSString stringWithFormat:@"%@  \u2193%@  \u2191%@", name, inStr, outStr];
+				mi.title = title;
+				mi.hidden = (title.length == 0);
+
+				NSNumber *pid = @([topProcesses[(NSUInteger)ndx][kNetProcessPIDKey] intValue]);
+				NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid.intValue];
+				NSImage *icon = app.icon;
+				if (!icon) {
+					static NSImage *defaultIcon = nil;
+					if (!defaultIcon) {
+						defaultIcon = [[NSWorkspace sharedWorkspace] iconForFile:@"/bin/bash"];
+					}
+					icon = defaultIcon;
+				}
+				icon = [icon copy];
+				icon.size = NSMakeSize(16, 16);
+				mi.image = icon;
+			} else {
+				mi.title = @"";
+				mi.hidden = YES;
+				mi.image = nil;
+			}
+		}
+	}
+
 	// Force the menu to redraw
 	LiveUpdateMenu(extraMenu);
 
 } // updateMenuWhenDown
+
 
 ///////////////////////////////////////////////////////////////
 //
@@ -1406,7 +1487,7 @@
 		// Deal with localizable throughput suffix
 		float suffixMaxWidth = 0;
 		NSAttributedString *throughString = [[NSAttributedString alloc]
-												initWithString:[NSString stringWithFormat:@"999.9%@",
+												initWithString:[NSString stringWithFormat:@"999%@",
 																[localizedStrings objectForKey:[ourPrefs netThroughputBits] ? kBitPerSecondLabel : kBytePerSecondLabel]]
 													attributes:[NSDictionary dictionaryWithObjectsAndKeys:
 																	throughputFont, NSFontAttributeName,
@@ -1415,7 +1496,7 @@
 			suffixMaxWidth = (float)[throughString size].width;
 		}
 		throughString = [[NSAttributedString alloc]
-							initWithString:[NSString stringWithFormat:@"999.9%@",
+							initWithString:[NSString stringWithFormat:@"999%@",
 												[localizedStrings objectForKey:[ourPrefs netThroughputBits] ? kKbPerSecondLabel : kKBPerSecondLabel]]
 								attributes:[NSDictionary dictionaryWithObjectsAndKeys:
 												throughputFont, NSFontAttributeName,
@@ -1424,7 +1505,7 @@
 			suffixMaxWidth = (float)[throughString size].width;
 		}
 		throughString = [[NSAttributedString alloc]
-							initWithString:[NSString stringWithFormat:@"999.9%@",
+							initWithString:[NSString stringWithFormat:@"999%@",
 												[localizedStrings objectForKey:[ourPrefs netThroughputBits] ? kMbPerSecondLabel : kMBPerSecondLabel]]
 								attributes:[NSDictionary dictionaryWithObjectsAndKeys:
 												throughputFont, NSFontAttributeName,
@@ -1433,7 +1514,7 @@
 			suffixMaxWidth = (float)[throughString size].width;
 		}
 		throughString = [[NSAttributedString alloc]
-							initWithString:[NSString stringWithFormat:@"999.9%@",
+							initWithString:[NSString stringWithFormat:@"999%@",
 												[localizedStrings objectForKey:[ourPrefs netThroughputBits] ? kGbPerSecondLabel : kGBPerSecondLabel]]
 								attributes:[NSDictionary dictionaryWithObjectsAndKeys:
 												throughputFont, NSFontAttributeName,
@@ -1496,10 +1577,7 @@
 	NSUInteger labelIndex = [self scaleDown:&bps usingBase:kilo withLimit:[labels count] - 1];
 	NSString *unitLabel = [labels objectAtIndex:labelIndex];
 
-	NSString *format = @"%.1f";
-	if (labelIndex == 0 || bps >= 1000) {
-		format = @"%.0f";
-	}
+	NSString *format = @"%.0f";
 
 	if (wantSpace) {
 		format = [NSString stringWithFormat:@"%@ %%@", format];

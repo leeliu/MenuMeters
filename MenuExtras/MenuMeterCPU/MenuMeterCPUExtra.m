@@ -267,7 +267,7 @@
 		// Loop by processor
 		int cpuDisplayModePrefs = [ourPrefs cpuDisplayMode];
         for (uint32_t cpuNum = 0; cpuNum < cpuCount; cpuNum+=stride) {
-			
+
 			// Render graph if needed
 			if (cpuDisplayModePrefs & kCPUDisplayGraph) {
 				[self renderHistoryGraphForProcessor:cpuNum atOffset:renderOffset];
@@ -305,11 +305,11 @@
 	// Update the various displays starting with uptime
 	NSString *title = [uptimeInfo uptime];
 	if (title) LiveUpdateMenuItemTitle(extraMenu, kCPUUptimeInfoMenuIndex, title);
-    
+
 	// Tasks
 	title = [cpuInfo currentProcessorTasks];
 	if (title) LiveUpdateMenuItemTitle(extraMenu, kCPUTaskInfoMenuIndex, title);
-    
+
 	// Load
 	title = [cpuInfo loadAverage];
 	if (title) LiveUpdateMenuItemTitle(extraMenu, kCPULoadInfoMenuIndex, title);
@@ -318,9 +318,9 @@
     title = [cpuInfo cpuPowerLimitStatus];
     if (title) LiveUpdateMenuItemTitle(extraMenu, kCPUPowerLimitInfoMenuIndex, title);
 #endif
-    
+
     // Top CPU intensive processes
-    NSArray* processes = ([ourPrefs cpuMaxProcessCount] > 0 ? [cpuTopProcesses runningProcessesByCPUUsage:[ourPrefs cpuMaxProcessCount]] : nil);    
+    NSArray* processes = ([ourPrefs cpuMaxProcessCount] > 0 ? [cpuTopProcesses runningProcessesByCPUUsage:[ourPrefs cpuMaxProcessCount]] : nil);
     LiveUpdateMenuItemTitleAndVisibility(extraMenu, kCPUProcessLabelMenuIndex, nil, (processes == nil));
     for (NSInteger ndx = 0; ndx < kCPUrocessCountMax; ++ndx) {
         if (ndx < processes.count) {
@@ -330,8 +330,8 @@
             NSMenuItem*mi=[extraMenu itemAtIndex: kCPUProcessMenuIndex + ndx];
             mi.title=title;
             mi.hidden=title.length==0;
-            
-            
+
+
             NSNumber* pid=processes[ndx][kProcessListItemPIDKey];
             NSRunningApplication*app=[NSRunningApplication runningApplicationWithProcessIdentifier:pid.intValue];
             NSImage*icon=app.icon;
@@ -349,7 +349,7 @@
             LiveUpdateMenuItemTitleAndVisibility(extraMenu, kCPUProcessMenuIndex + ndx, nil, YES);
         }
     }
-    
+
 	// Send the menu back to SystemUIServer
 	return extraMenu;
 
@@ -362,12 +362,12 @@
 ///////////////////////////////////////////////////////////////
 
 - (void)menuWillOpen:(NSMenu *)menu {
-    
+
     if ([ourPrefs cpuMaxProcessCount] > 0)
         [cpuTopProcesses startUpdateProcessList];
-     
+
     [super menuWillOpen:menu];
-    
+
 } // menuWillOpen:
 
 - (void)menuDidClose:(NSMenu *)menu {
@@ -440,7 +440,7 @@
     return cacheText;
 }
 - (void)renderSinglePercentForProcessor:(uint32_t)processor atOffset:(float)offset {
-    
+
 
 	// Current load (if available)
     double system=0,user=0;
@@ -679,7 +679,7 @@
 {
     float offset=1.0f;
     if ([ourPrefs cpuPercentDisplay] == kCPUPercentDisplaySmall) {
-        offset=+0.5f;
+        offset=-0.5f;
     }
     if([ourPrefs cpuPercentDisplay] == kCPUPercentDisplaySplit){
         offset = +0.0f;
@@ -690,7 +690,7 @@
 {
     float fontSize=14;
     if ([ourPrefs cpuPercentDisplay] == kCPUPercentDisplaySmall) {
-        fontSize = 11;
+        fontSize = 11.3f;
     }
     if([ourPrefs cpuPercentDisplay] == kCPUPercentDisplaySplit){
         fontSize = 9.5f;
@@ -782,7 +782,7 @@
 		powerMate = nil;
 	}
 
-    
+
 	// Force initial update
     statusItem.button.image=self.image;
 } // configFromPrefs

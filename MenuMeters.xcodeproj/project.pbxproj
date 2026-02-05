@@ -30,6 +30,8 @@
 		33883CF923655C9900B8AC14 /* MenuMeterUptime.m in Sources */ = {isa = PBXBuildFile; fileRef = D477AAF503D4BB9D00A87BC9 /* MenuMeterUptime.m */; };
 		33883CFA23655C9900B8AC14 /* smc_reader.m in Sources */ = {isa = PBXBuildFile; fileRef = F75EBE2F235B6F3600876CF7 /* smc_reader.m */; };
 		33883CFB23655C9900B8AC14 /* MenuMeterCPUTopProcesses.m in Sources */ = {isa = PBXBuildFile; fileRef = D602BB90207F9561004984C1 /* MenuMeterCPUTopProcesses.m */; };
+		AA00000000000001NETTOPP1 /* MenuMeterNetTopProcesses.m in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000003NETTOPH /* MenuMeterNetTopProcesses.m */; };
+		BB00000000000001MEMTOPP1 /* MenuMeterMemTopProcesses.m in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000003MEMTOPPM /* MenuMeterMemTopProcesses.m */; };
 		33883CFC23655C9900B8AC14 /* MenuMeterMemStats.m in Sources */ = {isa = PBXBuildFile; fileRef = D45F12E203D48A1C00A87BC9 /* MenuMeterMemStats.m */; };
 		33883CFD23655C9900B8AC14 /* MenuMeterDiskSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = D42EC96503D49AF700A87BC9 /* MenuMeterDiskSpace.m */; };
 		33883CFE23655C9900B8AC14 /* MenuMeterDiskIO.m in Sources */ = {isa = PBXBuildFile; fileRef = D42EC96203D49AF000A87BC9 /* MenuMeterDiskIO.m */; };
@@ -92,6 +94,8 @@
 		6349C11324BB733300C6FC99 /* MenuMeterUptime.m in Sources */ = {isa = PBXBuildFile; fileRef = D477AAF503D4BB9D00A87BC9 /* MenuMeterUptime.m */; };
 		6349C11424BB733300C6FC99 /* smc_reader.m in Sources */ = {isa = PBXBuildFile; fileRef = F75EBE2F235B6F3600876CF7 /* smc_reader.m */; };
 		6349C11524BB733300C6FC99 /* MenuMeterCPUTopProcesses.m in Sources */ = {isa = PBXBuildFile; fileRef = D602BB90207F9561004984C1 /* MenuMeterCPUTopProcesses.m */; };
+		AA00000000000002NETTOPP2 /* MenuMeterNetTopProcesses.m in Sources */ = {isa = PBXBuildFile; fileRef = AA00000000000003NETTOPH /* MenuMeterNetTopProcesses.m */; };
+		BB00000000000002MEMTOPP2 /* MenuMeterMemTopProcesses.m in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000003MEMTOPPM /* MenuMeterMemTopProcesses.m */; };
 		6349C11624BB733300C6FC99 /* MenuMeterMemStats.m in Sources */ = {isa = PBXBuildFile; fileRef = D45F12E203D48A1C00A87BC9 /* MenuMeterMemStats.m */; };
 		6349C11724BB733300C6FC99 /* MenuMeterDiskSpace.m in Sources */ = {isa = PBXBuildFile; fileRef = D42EC96503D49AF700A87BC9 /* MenuMeterDiskSpace.m */; };
 		6349C11824BB733300C6FC99 /* MenuMeterDiskIO.m in Sources */ = {isa = PBXBuildFile; fileRef = D42EC96203D49AF000A87BC9 /* MenuMeterDiskIO.m */; };
@@ -252,6 +256,8 @@
 		D4510D9104F2F0FD00A87BC9 /* MenuMeters.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MenuMeters.h; path = Common/MenuMeters.h; sourceTree = "<group>"; };
 		D45B6FA103D3BACD00A87BC9 /* MenuMeterNetPPP.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MenuMeterNetPPP.m; sourceTree = "<group>"; };
 		D45B6FA203D3BACD00A87BC9 /* MenuMeterNetPPP.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MenuMeterNetPPP.h; sourceTree = "<group>"; };
+		BB00000000000004MEMTOPPH /* MenuMeterMemTopProcesses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuMeterMemTopProcesses.h; path = MenuExtras/MenuMeterMem/MenuMeterMemTopProcesses.h; sourceTree = "<group>"; };
+		BB00000000000003MEMTOPPM /* MenuMeterMemTopProcesses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MenuMeterMemTopProcesses.m; path = MenuExtras/MenuMeterMem/MenuMeterMemTopProcesses.m; sourceTree = "<group>"; };
 		D45F12DE03D48A1300A87BC9 /* MenuMeterMemExtra.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MenuMeterMemExtra.h; path = MenuExtras/MenuMeterMem/MenuMeterMemExtra.h; sourceTree = "<group>"; };
 		D45F12DF03D48A1300A87BC9 /* MenuMeterMemExtra.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MenuMeterMemExtra.m; path = MenuExtras/MenuMeterMem/MenuMeterMemExtra.m; sourceTree = "<group>"; };
 		D45F12E203D48A1C00A87BC9 /* MenuMeterMemStats.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MenuMeterMemStats.m; path = MenuExtras/MenuMeterMem/MenuMeterMemStats.m; sourceTree = "<group>"; };
@@ -296,6 +302,8 @@
 		D4FC162703D26AAA00A87BC9 /* MenuMeterNetConfig.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = MenuMeterNetConfig.m; sourceTree = "<group>"; };
 		D602BB8F207F9561004984C1 /* MenuMeterCPUTopProcesses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuMeterCPUTopProcesses.h; path = MenuExtras/MenuMeterCPU/MenuMeterCPUTopProcesses.h; sourceTree = "<group>"; };
 		D602BB90207F9561004984C1 /* MenuMeterCPUTopProcesses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MenuMeterCPUTopProcesses.m; path = MenuExtras/MenuMeterCPU/MenuMeterCPUTopProcesses.m; sourceTree = "<group>"; };
+		AA00000000000004NETTOPH /* MenuMeterNetTopProcesses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuMeterNetTopProcesses.h; sourceTree = "<group>"; };
+		AA00000000000003NETTOPH /* MenuMeterNetTopProcesses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuMeterNetTopProcesses.m; sourceTree = "<group>"; };
 		F75EBE2E235B6F3600876CF7 /* smc_reader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smc_reader.h; sourceTree = "<group>"; };
 		F75EBE2F235B6F3600876CF7 /* smc_reader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = smc_reader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -441,6 +449,8 @@
 				D4FC162403D26AAA00A87BC9 /* MenuMeterNetStats.m */,
 				D45B6FA203D3BACD00A87BC9 /* MenuMeterNetPPP.h */,
 				D45B6FA103D3BACD00A87BC9 /* MenuMeterNetPPP.m */,
+				AA00000000000004NETTOPH /* MenuMeterNetTopProcesses.h */,
+				AA00000000000003NETTOPH /* MenuMeterNetTopProcesses.m */,
 			);
 			name = MenuMeterNet;
 			path = MenuExtras/MenuMeterNet;
@@ -513,6 +523,8 @@
 				D45F12DF03D48A1300A87BC9 /* MenuMeterMemExtra.m */,
 				D45F12E303D48A1C00A87BC9 /* MenuMeterMemStats.h */,
 				D45F12E203D48A1C00A87BC9 /* MenuMeterMemStats.m */,
+				BB00000000000004MEMTOPPH /* MenuMeterMemTopProcesses.h */,
+				BB00000000000003MEMTOPPM /* MenuMeterMemTopProcesses.m */,
 			);
 			name = MenuMeterMem;
 			sourceTree = "<group>";
@@ -846,6 +858,8 @@
 				33883D0223655C9900B8AC14 /* MenuMeterNetExtra.m in Sources */,
 				33883D0423655C9900B8AC14 /* MenuMeterNetConfig.m in Sources */,
 				33883D0623655C9900B8AC14 /* MenuMeterNetStats.m in Sources */,
+				AA00000000000001NETTOPP1 /* MenuMeterNetTopProcesses.m in Sources */,
+				BB00000000000001MEMTOPP1 /* MenuMeterMemTopProcesses.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -878,6 +892,8 @@
 				6349C11D24BB733300C6FC99 /* MenuMeterNetExtra.m in Sources */,
 				6349C11F24BB733300C6FC99 /* MenuMeterNetConfig.m in Sources */,
 				6349C12124BB733300C6FC99 /* MenuMeterNetStats.m in Sources */,
+				AA00000000000002NETTOPP2 /* MenuMeterNetTopProcesses.m in Sources */,
+				BB00000000000002MEMTOPP2 /* MenuMeterMemTopProcesses.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

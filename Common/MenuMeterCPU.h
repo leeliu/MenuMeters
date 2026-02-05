@@ -28,7 +28,7 @@
 ///////////////////////////////////////////////////////////////
 
 // Widths of the various displays
-#define kCPUPercentDisplayBorderWidth		2
+#define kCPUPercentDisplayBorderWidth		1
 #define kCPUThermometerDisplayWidth			11.0f
 #define kCPUDisplayMultiProcGapWidth		5
 #define kCPULabelOnlyWidth         25
