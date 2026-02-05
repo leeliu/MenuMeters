@@ -90,10 +90,69 @@
     // If extras are init'ed first, neither the updater nor the pref pane is init'ed,
     // which is even worse.
     // When extras are inited last, at least the updater and the pref pane are live.
-    cpuExtra=[[MenuMeterCPUExtra alloc] init];
-    diskExtra=[[MenuMeterDiskExtra alloc] init];
-    netExtra=[[MenuMeterNetExtra alloc] init];
-    memExtra=[[MenuMeterMemExtra alloc] init];
+    // Register for preference change notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleExtraPrefChange:)
+                                                 name:kCPUMenuBundleID
+                                               object:kPrefChangeNotification];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleExtraPrefChange:)
+                                                 name:kDiskMenuBundleID
+                                               object:kPrefChangeNotification];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleExtraPrefChange:)
+                                                 name:kNetMenuBundleID
+                                               object:kPrefChangeNotification];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleExtraPrefChange:)
+                                                 name:kMemMenuBundleID
+                                               object:kPrefChangeNotification];
+
+    if ([pref isExtraWithBundleIDLoaded:kCPUMenuBundleID]) {
+        cpuExtra=[[MenuMeterCPUExtra alloc] init];
+    }
+    if ([pref isExtraWithBundleIDLoaded:kDiskMenuBundleID]) {
+        diskExtra=[[MenuMeterDiskExtra alloc] init];
+    }
+    if ([pref isExtraWithBundleIDLoaded:kNetMenuBundleID]) {
+        netExtra=[[MenuMeterNetExtra alloc] init];
+    }
+    if ([pref isExtraWithBundleIDLoaded:kMemMenuBundleID]) {
+        memExtra=[[MenuMeterMemExtra alloc] init];
+    }
+}
+
+- (void)handleExtraPrefChange:(NSNotification *)notification {
+    NSString *bundleID = [notification name];
+    BOOL shouldBeLoaded = [pref isExtraWithBundleIDLoaded:bundleID];
+
+    // Create extras when enabled (if not already created)
+    // Extras handle their own cleanup via configFromPrefs when disabled
+    if ([bundleID isEqualToString:kCPUMenuBundleID]) {
+        if (shouldBeLoaded && !cpuExtra) {
+            cpuExtra = [[MenuMeterCPUExtra alloc] init];
+        } else if (!shouldBeLoaded) {
+            cpuExtra = nil;
+        }
+    } else if ([bundleID isEqualToString:kDiskMenuBundleID]) {
+        if (shouldBeLoaded && !diskExtra) {
+            diskExtra = [[MenuMeterDiskExtra alloc] init];
+        } else if (!shouldBeLoaded) {
+            diskExtra = nil;
+        }
+    } else if ([bundleID isEqualToString:kNetMenuBundleID]) {
+        if (shouldBeLoaded && !netExtra) {
+            netExtra = [[MenuMeterNetExtra alloc] init];
+        } else if (!shouldBeLoaded) {
+            netExtra = nil;
+        }
+    } else if ([bundleID isEqualToString:kMemMenuBundleID]) {
+        if (shouldBeLoaded && !memExtra) {
+            memExtra = [[MenuMeterMemExtra alloc] init];
+        } else if (!shouldBeLoaded) {
+            memExtra = nil;
+        }
+    }
 }
 
 

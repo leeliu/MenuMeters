@@ -68,26 +68,26 @@ enum {
 	kNetDisplayThroughput					= 2,
 	kNetDisplayGraph						= 4
 };
-#define kNetDisplayDefault					kNetDisplayArrows
+#define kNetDisplayDefault					(kNetDisplayGraph | kNetDisplayThroughput)
 
 // Display orientation
 enum {
 	kNetDisplayOrientTxRx		= 0,
 	kNetDisplayOrientRxTx
 };
-#define kNetDisplayOrientationDefault		kNetDisplayOrientTxRx
+#define kNetDisplayOrientationDefault		kNetDisplayOrientRxTx
 
 // Timer
 #define kNetUpdateIntervalMin				0.5
 #define kNetUpdateIntervalMax				20.0
-#define kNetUpdateIntervalDefault			2.0
+#define kNetUpdateIntervalDefault			1.0
 
 // Net scaling types
 enum {
 	kNetScaleInterfaceSpeed		= 0,
 	kNetScalePeakTraffic
 };
-#define kNetScaleDefault					kNetScaleInterfaceSpeed
+#define kNetScaleDefault					kNetScalePeakTraffic
 
 // Net scaling calcs
 enum {
@@ -101,7 +101,7 @@ enum {
 // Graph display
 #define kNetGraphWidthMin					11
 #define kNetGraphWidthMax					88
-#define kNetGraphWidthDefault				33
+#define kNetGraphWidthDefault				44
 
 // Net graph styles
 enum {
@@ -110,21 +110,21 @@ enum {
 	kNetGraphStyleOpposed,
 	kNetGraphStyleInverseOpposed
 };
-#define kNetGraphStyleDefault				kNetGraphStyleStandard
+#define kNetGraphStyleDefault				kNetGraphStyleCentered
 
 // Throughput label
-#define kNetThroughputLabelDefault			YES
+#define kNetThroughputLabelDefault			NO
 
 // Thoughput 1K bound
-#define kNetThroughput1KBoundDefault		NO
+#define kNetThroughput1KBoundDefault		YES
 
 // Thoughput Bits per second
 #define kNetThroughputBitsDefault			NO
 
 // Colors
 											// Moss green
-#define kNetTransmitColorDefault			(self.isCatalinaOrLater?[NSColor systemGreenColor]:[NSColor colorWithDeviceRed:0.0f green:0.5f blue:0.25f alpha:1.0f])
+#define kNetTransmitColorDefault			[NSColor colorWithDeviceRed:0.839f green:0.839f blue:0.839f alpha:1.0f]
 											// Brick red
-#define kNetReceiveColorDefault				(self.isCatalinaOrLater?[NSColor systemRedColor]:[NSColor colorWithDeviceRed:0.5f green:0.0f blue:0.0f alpha:1.0f])
+#define kNetReceiveColorDefault				[NSColor whiteColor]
 											// Light grey
 #define kNetInactiveColorDefault			[NSColor secondaryLabelColor]

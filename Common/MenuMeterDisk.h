@@ -60,7 +60,7 @@ typedef enum {
 #define kDiskDarkImageSets				[NSArray arrayWithObjects: @"Dark Color Arrows", @"Dark Arrows", \
 											@"Lights", @"Aqua Lights", @"Disk Arrows", \
 											@"Disk Arrows (large)", nil]
-#define kDiskImageSetDefault			0
+#define kDiskImageSetDefault			3
 #define kDiskArrowsImageSet				4
 #define kDiskArrowsLargeImageSet		5
 

@@ -82,7 +82,7 @@ enum {
 	kCPUDisplayThermometer					= 4,
     kCPUDisplayHorizontalThermometer        = 8
 };
-#define kCPUDisplayDefault					kCPUDisplayPercent
+#define kCPUDisplayDefault					(kCPUDisplayPercent | kCPUDisplayGraph)
 
 // Percent display modes
 enum {
@@ -114,7 +114,7 @@ enum {
 // Graph display
 #define kCPUGraphWidthMin					11
 #define kCPUGraphWidthMax					88
-#define kCPUGraphWidthDefault				33
+#define kCPUGraphWidthDefault				44
 
 // Thermometer display
 #define kCPUHorizontalRowsMin               1
@@ -127,7 +127,7 @@ enum {
 #define kCPUMenuWidthDefault                120
 
 // Multiproc averaging
-#define kCPUAvgAllProcsDefault				NO
+#define kCPUAvgAllProcsDefault				YES
 
 // Multiproc sum percentage
 #define kCPUSumAllProcsPercentDefault		NO
@@ -142,12 +142,12 @@ enum {
 #define kCPUPowerMateDefault				NO
 
 // Show CPU temperature
-#define kCPUShowTemperatureDefault          YES
+#define kCPUShowTemperatureDefault          NO
 
 // Colors
 											// Maraschino
-#define kCPUSystemColorDefault				[NSColor systemRedColor]
+#define kCPUSystemColorDefault				[NSColor whiteColor]
 											// Midnight blue
-#define kCPUUserColorDefault				(self.isCatalinaOrLater?[NSColor systemBlueColor]:[NSColor colorWithDeviceRed:0.0f green:0.0f blue:0.5f alpha:1.0f])
+#define kCPUUserColorDefault				[NSColor colorWithDeviceRed:0.839f green:0.839f blue:0.839f alpha:1.0f]
                                             // Orange
 #define kCPUTemperatureColorDefault         [NSColor systemRedColor]

@@ -1087,7 +1087,8 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 } // loadExtraAtURL:withID:
 
 - (BOOL)isExtraWithBundleIDLoaded:(NSString *)bundleID {
-    return [ourPrefs loadBoolPref:bundleID defaultValue:YES];
+    BOOL defaultValue = [bundleID isEqualToString:kDiskMenuBundleID] ? NO : YES;
+    return [ourPrefs loadBoolPref:bundleID defaultValue:defaultValue];
 } // isExtraWithBundleIDLoaded
 
 - (void)removeExtraWithBundleID:(NSString *)bundleID {

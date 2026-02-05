@@ -143,6 +143,9 @@ NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate>
 #else
 -(instancetype)initWithAboutFileName:(NSString*)about;
 #endif
+// Extra loading state
+- (BOOL)isExtraWithBundleIDLoaded:(NSString *)bundleID;
+
 // IB Targets
 -(IBAction)openAbout:(id)sender;
 - (IBAction)liveUpdateInterval:(id)sender;

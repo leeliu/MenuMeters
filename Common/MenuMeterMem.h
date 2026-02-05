@@ -79,12 +79,12 @@ enum {
 	kMemDisplayGraph,
 	kMemDisplayNumber
 };
-#define kMemDisplayDefault					kMemDisplayPie
+#define kMemDisplayDefault					kMemDisplayNumber
 
 // Used/Free label
-#define kMemUsedFreeLabelDefault			YES
+#define kMemUsedFreeLabelDefault			NO
 
-#define kMemPressureDefault           NO
+#define kMemPressureDefault           YES
 
 // Page indicator
 #define kMemPageIndicatorDefault			NO
@@ -101,9 +101,9 @@ enum {
 
 // Colors
 											// Clover
-#define kMemFreeColorDefault				[NSColor colorWithDeviceRed:0.0f green:0.5f blue:0.0f alpha:1.0f]
+#define kMemFreeColorDefault				[NSColor colorWithDeviceRed:0.839f green:0.839f blue:0.839f alpha:1.0f]
 											// Cayenne
-#define kMemUsedColorDefault				[NSColor colorWithDeviceRed:0.5f green:0.0f blue:0.0f alpha:1.0f]
+#define kMemUsedColorDefault				[NSColor whiteColor]
 											// Lime
 #define kMemActiveColorDefault				[NSColor colorWithDeviceRed:0.5f green:1.0f blue:0.0f alpha:1.0f]
 											// Color between Aluminum and Magnesium
