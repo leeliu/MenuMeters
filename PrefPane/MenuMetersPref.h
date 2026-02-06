@@ -107,6 +107,8 @@ NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate>
 	IBOutlet NSColorWell			*memPageoutColor;
 	IBOutlet NSTextField			*memPageoutColorLabel;
         IBOutlet NSButton               *memPressureMode;
+	IBOutlet NSSlider				*memMaxProcessCount;
+	IBOutlet NSTextField			*memMaxProcessCountLabel;
 	// Net pane controls
 	IBOutlet NSButton				*netMeterToggle;
 	IBOutlet NSPopUpButton			*netDisplayMode;
@@ -128,6 +130,8 @@ NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate>
 	IBOutlet NSColorWell			*netTxColor;
 	IBOutlet NSColorWell			*netRxColor;
 	IBOutlet NSColorWell			*netInactiveColor;
+	IBOutlet NSSlider				*netMaxProcessCount;
+	IBOutlet NSTextField			*netMaxProcessCountLabel;
     __weak IBOutlet NSPopUpButton *updateIntervalButton;
     IBOutlet NSView					*sparkleUIContainer;
     BOOL hiddenAlertIsShown;

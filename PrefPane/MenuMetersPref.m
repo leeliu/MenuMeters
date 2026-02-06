@@ -842,6 +842,8 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 		[ourPrefs saveMemPageInColor:[memPageinColor color]];
 	} else if (sender == memPageoutColor) {
 		[ourPrefs saveMemPageOutColor:[memPageoutColor color]];
+	} else if (sender == memMaxProcessCount) {
+		[ourPrefs saveMemMaxProcessCount:(int)[memMaxProcessCount intValue]];
 	}
 	
 	// Update controls
@@ -861,6 +863,9 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 	[memPageinColor setColor:[ourPrefs memPageInColor]];
 	[memPageoutColor setColor:[ourPrefs memPageOutColor]];
 	[memIntervalDisplay takeIntValueFrom:memInterval];
+	[memMaxProcessCount setIntValue:[ourPrefs memMaxProcessCount]];
+	[memMaxProcessCountLabel setStringValue:[NSString stringWithFormat:NSLocalizedString(@"(%d)", @"DO NOT LOCALIZE!!!"),
+											  (short)[ourPrefs memMaxProcessCount]]];
 
 	// Disable controls as needed
 	if ((([memDisplayMode indexOfSelectedItem] + 1) == kMemDisplayPie) ||
@@ -942,6 +947,8 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 		[ourPrefs saveNetReceiveColor:[netRxColor color]];
 	} else if (sender == netInactiveColor) {
 		[ourPrefs saveNetInactiveColor:[netInactiveColor color]];
+	} else if (sender == netMaxProcessCount) {
+		[ourPrefs saveNetMaxProcessCount:(int)[netMaxProcessCount intValue]];
 	} else if (sender == netPreferInterface) {
 		NSMenuItem *menuItem = (NSMenuItem *)[netPreferInterface selectedItem];
 		if (menuItem) {
@@ -973,6 +980,9 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 	[netRxColor setColor:[ourPrefs netReceiveColor]];
 	[netInactiveColor setColor:[ourPrefs netInactiveColor]];
 	[netIntervalDisplay takeDoubleValueFrom:netInterval];
+	[netMaxProcessCount setIntValue:[ourPrefs netMaxProcessCount]];
+	[netMaxProcessCountLabel setStringValue:[NSString stringWithFormat:NSLocalizedString(@"(%d)", @"DO NOT LOCALIZE!!!"),
+											  (short)[ourPrefs netMaxProcessCount]]];
 	if ([[ourPrefs netPreferInterface] isEqualToString:kNetPrimaryInterface]) {
 		[netPreferInterface selectItemAtIndex:0];
 	} else {

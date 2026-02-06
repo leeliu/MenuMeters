@@ -47,7 +47,8 @@
 #define kMemSwapSizeInfoMenuIndex			11
 
 // Top processes
-#define kMemProcessCountMax					10
+#define kMemProcessCountMin					0
+#define kMemProcessCountMax					25
 #define kMemProcessCountDefault				10
 
 ///////////////////////////////////////////////////////////////
@@ -70,6 +71,7 @@
 #define kMemWireColorPref					@"MemWireColor"
 #define kMemCompressedColorPref				@"MemCompressedColor"
 #define kMemPageInColorPref					@"MemPageInColor"
+#define kMemMaxProcessCountPref				@"MemMaxProcessCount"
 #define kMemPageOutColorPref				@"MemPageOutColor"
 
 // Display modes

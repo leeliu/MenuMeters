@@ -1252,7 +1252,18 @@
 
 	// Update top network processes (mirrors CPU pattern exactly)
 	{
-		NSArray *topProcesses = [netTopProcesses runningProcessesByNetUsage:kNetProcessCountDefault];
+		int maxCount = [ourPrefs netMaxProcessCount];
+		if (maxCount == 0) {
+			NSMenuItem *sepItem = netProcessInsertedItems[0];
+			NSMenuItem *headerItem = netProcessInsertedItems[1];
+			sepItem.hidden = YES;
+			headerItem.hidden = YES;
+			for (NSInteger ndx = 0; ndx < kNetProcessCountMax; ndx++) {
+				NSMenuItem *mi = netProcessInsertedItems[ndx + 2];
+				mi.hidden = YES;
+			}
+		} else {
+		NSArray *topProcesses = [netTopProcesses runningProcessesByNetUsage:maxCount];
 		// Sort by highest total download + upload
 		topProcesses = [topProcesses sortedArrayUsingComparator:^NSComparisonResult(NSDictionary *a, NSDictionary *b) {
 			double totalA = [a[kNetProcessBytesInPerSecKey] doubleValue] + [a[kNetProcessBytesOutPerSecKey] doubleValue];
@@ -1294,6 +1305,7 @@
 				mi.image = nil;
 			}
 		}
+		} // end else (maxCount > 0)
 	}
 
 	// Force the menu to redraw

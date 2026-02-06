@@ -850,7 +850,19 @@
 }
 
 - (void)updateProcessMenuItems {
-	NSArray *topProcesses = [memTopProcesses runningProcessesByMemUsage:kMemProcessCountDefault];
+	int maxCount = [ourPrefs memMaxProcessCount];
+	if (maxCount == 0) {
+		NSMenuItem *sepItem = memProcessMenuItems[0];
+		NSMenuItem *headerItem = memProcessMenuItems[1];
+		sepItem.hidden = YES;
+		headerItem.hidden = YES;
+		for (NSInteger ndx = 0; ndx < kMemProcessCountMax; ndx++) {
+			NSMenuItem *mi = memProcessMenuItems[ndx + 2];
+			mi.hidden = YES;
+		}
+		return;
+	}
+	NSArray *topProcesses = [memTopProcesses runningProcessesByMemUsage:maxCount];
 	NSMenuItem *sepItem = memProcessMenuItems[0];
 	NSMenuItem *headerItem = memProcessMenuItems[1];
 	sepItem.hidden = (topProcesses.count == 0);

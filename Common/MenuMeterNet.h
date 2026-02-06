@@ -34,7 +34,8 @@
 #define kNetDisplayGapWidth					0
 
 // Top network processes
-#define kNetProcessCountMax					10
+#define kNetProcessCountMin					0
+#define kNetProcessCountMax					25
 #define kNetProcessCountDefault				5
 
 // String for primary interface selection (primary interface)
@@ -60,6 +61,7 @@
 #define kNetPreferInterfacePref				@"NetPreferInterface"
 #define kNetTransmitColorPref				@"NetTransmitColor"
 #define kNetReceiveColorPref				@"NetReceiveColor"
+#define kNetMaxProcessCountPref				@"NetMaxProcessCount"
 #define kNetInactiveColorPref				@"NetInactiveColor"
 
 // Display modes

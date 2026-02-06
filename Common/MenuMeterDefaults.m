@@ -486,6 +486,17 @@
 	[self saveColorPref:kMemPageOutColorPref value:color];
 } // saveMemPageoutColor
 
+- (int)memMaxProcessCount {
+    return [self loadIntPref:kMemMaxProcessCountPref
+                    lowBound:kMemProcessCountMin
+                   highBound:kMemProcessCountMax
+                defaultValue:kMemProcessCountDefault];
+} // memMaxProcessCount
+
+- (void)saveMemMaxProcessCount:(int)maxCount {
+    [self saveIntPref:kMemMaxProcessCountPref value:maxCount];
+} // saveMemMaxProcessCount
+
 ///////////////////////////////////////////////////////////////
 //
 //	Net menu prefs
@@ -623,6 +634,17 @@
 - (void)saveNetPreferInterface:(NSString *)interface {
 	[self saveStringPref:kNetPreferInterfacePref value:interface];
 } // saveNetPreferInterface
+
+- (int)netMaxProcessCount {
+    return [self loadIntPref:kNetMaxProcessCountPref
+                    lowBound:kNetProcessCountMin
+                   highBound:kNetProcessCountMax
+                defaultValue:kNetProcessCountDefault];
+} // netMaxProcessCount
+
+- (void)saveNetMaxProcessCount:(int)maxCount {
+    [self saveIntPref:kNetMaxProcessCountPref value:maxCount];
+} // saveNetMaxProcessCount
 
 
 
