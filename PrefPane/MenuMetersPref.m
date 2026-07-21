@@ -659,12 +659,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 		[ourPrefs saveCpuPowerMate:(([cpuPowerMate state] == NSOnState) ? YES : NO)];
 	} else if (sender == cpuPowerMateMode) {
 		[ourPrefs saveCpuPowerMateMode:(int)[cpuPowerMateMode indexOfSelectedItem]];
-	} else if (sender == cpuUserColor) {
-		[ourPrefs saveCpuUserColor:[cpuUserColor color]];
-	} else if (sender == cpuSystemColor) {
-		[ourPrefs saveCpuSystemColor:[cpuSystemColor color]];
-        } else if (sender == cpuTemperatureColor) {
-                [ourPrefs saveCpuTemperatureColor:[cpuTemperatureColor color]];
 	} else if (!sender) {
 		// On first load handle multiprocs options
 		if (![self isMultiProcessor]) {
@@ -712,9 +706,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 	[cpuPowerMate setState:([ourPrefs cpuPowerMate] ? NSOnState : NSOffState)];
 	[cpuPowerMateMode selectItemAtIndex:-1]; // Work around multiselects. AppKit problem?
 	[cpuPowerMateMode selectItemAtIndex:[ourPrefs cpuPowerMateMode]];
-	[cpuUserColor setColor:[ourPrefs cpuUserColor]];
-	[cpuSystemColor setColor:[ourPrefs cpuSystemColor]];
-        [cpuTemperatureColor setColor:[ourPrefs cpuTemperatureColor]];
 	[cpuIntervalDisplay takeDoubleValueFrom:cpuInterval];
 
 /*	if ([cpuPercentage state]==NSOnState) {
@@ -744,20 +735,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 		[cpuMenuWidth setEnabled:NO];
 		[cpuMenuWidthLabel setTextColor:[NSColor disabledControlTextColor]];
     }
-/*	if ((([cpuDisplayMode indexOfSelectedItem] + 1) & (kCPUDisplayGraph | kCPUDisplayThermometer | kCPUDisplayHorizontalThermometer)) ||
-		((([cpuDisplayMode indexOfSelectedItem] + 1) & kCPUDisplayPercent) &&
-			([cpuPercentMode indexOfSelectedItem] == kCPUPercentDisplaySplit))) {*/
-		[cpuUserColor setEnabled:YES];
-		[cpuSystemColor setEnabled:YES];
-		[cpuUserColorLabel setTextColor:[NSColor controlTextColor]];
-		[cpuSystemColorLabel setTextColor:[NSColor controlTextColor]];
-/*	} else {
-		[cpuUserColor setEnabled:NO];
-		[cpuSystemColor setEnabled:NO];
-		[cpuUserColorLabel setTextColor:[NSColor disabledControlTextColor]];
-		[cpuSystemColorLabel setTextColor:[NSColor disabledControlTextColor]];
-	}*/
-
 	// Notify
 	if ([self isExtraWithBundleIDLoaded:kCPUMenuBundleID]) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:kCPUMenuBundleID
@@ -834,10 +811,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 		[ourPrefs saveMemWireColor:[memWiredColor color]];
 	} else if (sender == memCompressedColor) {
 		[ourPrefs saveMemCompressedColor:[memCompressedColor color]];
-	} else if (sender == memFreeColor) {
-		[ourPrefs saveMemFreeColor:[memFreeColor color]];
-	} else if (sender == memUsedColor) {
-		[ourPrefs saveMemUsedColor:[memUsedColor color]];
 	} else if (sender == memPageinColor) {
 		[ourPrefs saveMemPageInColor:[memPageinColor color]];
 	} else if (sender == memPageoutColor) {
@@ -858,8 +831,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 	[memInactiveColor setColor:[ourPrefs memInactiveColor]];
 	[memWiredColor setColor:[ourPrefs memWireColor]];
 	[memCompressedColor setColor:[ourPrefs memCompressedColor]];
-	[memFreeColor setColor:[ourPrefs memFreeColor]];
-	[memUsedColor setColor:[ourPrefs memUsedColor]];
 	[memPageinColor setColor:[ourPrefs memPageInColor]];
 	[memPageoutColor setColor:[ourPrefs memPageOutColor]];
 	[memIntervalDisplay takeIntValueFrom:memInterval];
@@ -941,12 +912,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 		[ourPrefs saveNetGraphStyle:(int)[netGraphStyle indexOfSelectedItem]];
 	} else if (sender == netGraphWidth) {
 		[ourPrefs saveNetGraphLength:[netGraphWidth intValue]];
-	} else if (sender == netTxColor) {
-		[ourPrefs saveNetTransmitColor:[netTxColor color]];
-	} else if (sender == netRxColor) {
-		[ourPrefs saveNetReceiveColor:[netRxColor color]];
-	} else if (sender == netInactiveColor) {
-		[ourPrefs saveNetInactiveColor:[netInactiveColor color]];
 	} else if (sender == netMaxProcessCount) {
 		[ourPrefs saveNetMaxProcessCount:(int)[netMaxProcessCount intValue]];
 	} else if (sender == netPreferInterface) {
@@ -976,9 +941,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 	[netGraphStyle selectItemAtIndex:-1]; // Work around multiselects. AppKit problem?
 	[netGraphStyle selectItemAtIndex:[ourPrefs netGraphStyle]];
 	[netGraphWidth setIntValue:[ourPrefs netGraphLength]];
-	[netTxColor setColor:[ourPrefs netTransmitColor]];
-	[netRxColor setColor:[ourPrefs netReceiveColor]];
-	[netInactiveColor setColor:[ourPrefs netInactiveColor]];
 	[netIntervalDisplay takeDoubleValueFrom:netInterval];
 	[netMaxProcessCount setIntValue:[ourPrefs netMaxProcessCount]];
 	[netMaxProcessCountLabel setStringValue:[NSString stringWithFormat:NSLocalizedString(@"(%d)", @"DO NOT LOCALIZE!!!"),

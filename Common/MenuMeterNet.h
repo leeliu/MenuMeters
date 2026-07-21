@@ -59,10 +59,7 @@
 #define kNetScaleModePref					@"NetScaleMode"
 #define kNetScaleCalcPref					@"NetScaleCalc"
 #define kNetPreferInterfacePref				@"NetPreferInterface"
-#define kNetTransmitColorPref				@"NetTransmitColor"
-#define kNetReceiveColorPref				@"NetReceiveColor"
 #define kNetMaxProcessCountPref				@"NetMaxProcessCount"
-#define kNetInactiveColorPref				@"NetInactiveColor"
 
 // Display modes
 enum {
@@ -123,10 +120,3 @@ enum {
 // Thoughput Bits per second
 #define kNetThroughputBitsDefault			NO
 
-// Colors
-											// Moss green
-#define kNetTransmitColorDefault			[NSColor colorWithDeviceRed:0.839f green:0.839f blue:0.839f alpha:1.0f]
-											// Brick red
-#define kNetReceiveColorDefault				[NSColor whiteColor]
-											// Light grey
-#define kNetInactiveColorDefault			[NSColor secondaryLabelColor]

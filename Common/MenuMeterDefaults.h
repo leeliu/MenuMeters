@@ -52,9 +52,6 @@
 - (int)cpuPowerMateMode;
 - (int)cpuTemperatureUnit;
 - (NSString*)cpuTemperatureSensor;
-- (NSColor *)cpuSystemColor;
-- (NSColor *)cpuUserColor;
-- (NSColor *)cpuTemperatureColor;
 - (void)saveCpuInterval:(double)interval;
 - (void)saveCpuDisplayMode:(int)mode;
 - (void)saveCpuPercentDisplay:(int)mode;
@@ -69,9 +66,6 @@
 - (void)saveCpuPowerMate:(BOOL)active;
 - (void)saveCpuTemperature:(BOOL)show;
 - (void)saveCpuPowerMateMode:(int)mode;
-- (void)saveCpuSystemColor:(NSColor *)color;
-- (void)saveCpuUserColor:(NSColor *)color;
-- (void)saveCpuTemperatureColor:(NSColor *)color;
 - (void)saveCpuTemperatureUnit:(int)unit;
 - (void)saveCpuTemperatureSensor:(NSString*)name;
 
@@ -91,8 +85,6 @@
 - (int)memGraphLength;
 - (BOOL)memPageIndicator;
 - (BOOL)memPressure;
-- (NSColor *)memFreeColor;
-- (NSColor *)memUsedColor;
 - (NSColor *)memActiveColor;
 - (NSColor *)memInactiveColor;
 - (NSColor *)memWireColor;
@@ -105,8 +97,6 @@
 - (void)saveMemUsedFreeLabel:(BOOL)label;
 - (void)saveMemPressure:(BOOL)label;
 - (void)saveMemGraphLength:(int)length;
-- (void)saveMemFreeColor:(NSColor *)color;
-- (void)saveMemUsedColor:(NSColor *)color;
 - (void)saveMemActiveColor:(NSColor *)color;
 - (void)saveMemInactiveColor:(NSColor *)color;
 - (void)saveMemWireColor:(NSColor *)color;
@@ -127,9 +117,6 @@
 - (BOOL)netThroughputBits;
 - (int)netGraphStyle;
 - (int)netGraphLength;
-- (NSColor *)netTransmitColor;
-- (NSColor *)netReceiveColor;
-- (NSColor *)netInactiveColor;
 - (NSString *)netPreferInterface;
 - (void)saveNetInterval:(double)interval;
 - (void)saveNetDisplayMode:(int)mode;
@@ -141,9 +128,6 @@
 - (void)saveNetThroughputBits:(BOOL)bits;
 - (void)saveNetGraphStyle:(int)style;
 - (void)saveNetGraphLength:(int)length;
-- (void)saveNetTransmitColor:(NSColor *)color;
-- (void)saveNetReceiveColor:(NSColor *)color;
-- (void)saveNetInactiveColor:(NSColor *)color;
 - (void)saveNetPreferInterface:(NSString *)interface;
 - (int)netMaxProcessCount;
 - (void)saveNetMaxProcessCount:(int)maxCount;

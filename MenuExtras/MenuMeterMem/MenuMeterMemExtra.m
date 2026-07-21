@@ -913,9 +913,12 @@
 	// Handle menubar theme changes
         fgMenuThemeColor = self.menuBarTextColor;
 	
+	// Used/free adapt to the menu bar appearance automatically: used is the
+	// full-contrast text color, free the dimmer secondary label (a visible grey
+	// on both light and dark bars).
+        usedColor = [NSColor textColor];
+        freeColor = [NSColor secondaryLabelColor];
 	// Cache colors to skip archive cycle from prefs
-        freeColor = [self colorByAdjustingForLightDark:[ourPrefs memFreeColor]];
-        usedColor = [self colorByAdjustingForLightDark:[ourPrefs memUsedColor]];
         activeColor = [self colorByAdjustingForLightDark:[ourPrefs memActiveColor]];
         inactiveColor = [self colorByAdjustingForLightDark:[ourPrefs memInactiveColor]];
         wireColor = [self colorByAdjustingForLightDark:[ourPrefs memWireColor]];

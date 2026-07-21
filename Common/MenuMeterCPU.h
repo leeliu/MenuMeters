@@ -64,12 +64,9 @@
 // Note that "Lower Half" is now reused to show only physical cores
 #define kCPUAvgLowerHalfProcsPref			@"CPUAverageLowerHalfProcs"
 #define kCPUSortByUsagePref				    @"CPUSortByUsage"
-#define kCPUSystemColorPref					@"CPUSystemColor"
-#define kCPUUserColorPref					@"CPUUserColor"
 #define kCPUPowerMatePref					@"CPUPowerMate"
 #define kCPUPowerMateMode					@"CPUPowerMateMode"
 #define kCPUShowTemperature                 @"CPUTemperature"
-#define kCPUTemperatureColor                @"CPUTemperatureColor"
 #define kCPUTemperatureSensor                @"CPUTemperatureSensor"
 #define kCPUTemperatureSensorDefault                @"CPUTemperatureSensorDefault"
 #define kCPUTemperatureUnit                @"CPUTemperatureUnit"
@@ -143,11 +140,3 @@ enum {
 
 // Show CPU temperature
 #define kCPUShowTemperatureDefault          NO
-
-// Colors
-											// Maraschino
-#define kCPUSystemColorDefault				[NSColor whiteColor]
-											// Midnight blue
-#define kCPUUserColorDefault				[NSColor colorWithDeviceRed:0.839f green:0.839f blue:0.839f alpha:1.0f]
-                                            // Orange
-#define kCPUTemperatureColorDefault         [NSColor systemRedColor]

@@ -75,12 +75,7 @@ NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate>
 	IBOutlet NSPopUpButton				*cpuMultipleCPU;
 	IBOutlet NSButton				*cpuPowerMate;
 	IBOutlet NSPopUpButton			*cpuPowerMateMode;
-	IBOutlet NSColorWell			*cpuUserColor;
-    IBOutlet NSColorWell            *cpuTemperatureColor;
     IBOutlet NSPopUpButton* cpuTemperatureSensor;
-	IBOutlet NSTextField			*cpuUserColorLabel;
-	IBOutlet NSColorWell			*cpuSystemColor;
-	IBOutlet NSTextField			*cpuSystemColorLabel;
 	// Disk pane controls
 	IBOutlet NSButton				*diskMeterToggle;
 	IBOutlet NSPopUpButton			*diskImageSet;
@@ -100,8 +95,6 @@ NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate>
 	IBOutlet NSColorWell			*memInactiveColor;
 	IBOutlet NSColorWell			*memWiredColor;
 	IBOutlet NSColorWell			*memCompressedColor;
-        IBOutlet NSColorWell			*memFreeColor;
-	IBOutlet NSColorWell			*memUsedColor;
 	IBOutlet NSColorWell			*memPageinColor;
 	IBOutlet NSTextField			*memPageinColorLabel;
 	IBOutlet NSColorWell			*memPageoutColor;
@@ -127,9 +120,6 @@ NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate>
 	IBOutlet NSTextField			*netGraphStyleLabel;
 	IBOutlet NSSlider				*netGraphWidth;
 	IBOutlet NSTextField			*netGraphWidthLabel;
-	IBOutlet NSColorWell			*netTxColor;
-	IBOutlet NSColorWell			*netRxColor;
-	IBOutlet NSColorWell			*netInactiveColor;
 	IBOutlet NSSlider				*netMaxProcessCount;
 	IBOutlet NSTextField			*netMaxProcessCountLabel;
     __weak IBOutlet NSPopUpButton *updateIntervalButton;

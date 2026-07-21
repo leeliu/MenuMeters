@@ -227,21 +227,9 @@
 -(void)saveCpuTemperatureSensor:(NSString *)name{
     [self saveStringPref:kCPUTemperatureSensor value:name];
 }
-- (NSColor *)cpuSystemColor {
-	return [self loadColorPref:kCPUSystemColorPref defaultValue:kCPUSystemColorDefault];
-} // cpuSystemColor
-
-- (NSColor *)cpuUserColor {
-	return [self loadColorPref:kCPUUserColorPref defaultValue:kCPUUserColorDefault];
-} // cpuUserColor
-
 - (BOOL)cpuShowTemperature {
     return [self loadBoolPref:kCPUShowTemperature defaultValue:kCPUShowTemperatureDefault];
 }
-
-- (NSColor *)cpuTemperatureColor {
-    return [self loadColorPref:kCPUTemperatureColor defaultValue:kCPUTemperatureColorDefault];
-} //cpuTemperatureColor
 
 - (void)saveCpuInterval:(double)interval {
 	[self saveDoublePref:kCPUIntervalPref value:interval];
@@ -302,18 +290,6 @@
 - (void)saveCpuTemperature:(BOOL)show {
     [self saveBoolPref: kCPUShowTemperature value:show];
 } // saveCpuTemperature
-
-- (void)saveCpuTemperatureColor:(NSColor *)color {
-    [self saveColorPref:kCPUTemperatureColor value:color];
-}
-
-- (void)saveCpuSystemColor:(NSColor *)color {
-	[self saveColorPref:kCPUSystemColorPref value:color];
-} // saveCpuSystemColor
-
-- (void)saveCpuUserColor:(NSColor *)color {
-	[self saveColorPref:kCPUUserColorPref value:color];
-} // saveCpuUserColor
 
 ///////////////////////////////////////////////////////////////
 //
@@ -398,14 +374,6 @@
 				defaultValue:kMemGraphWidthDefault];
 } // memGraphLength
 
-- (NSColor *)memFreeColor {
-	return [self loadColorPref:kMemFreeColorPref defaultValue:kMemFreeColorDefault];
-} // memFreeColor
-
-- (NSColor *)memUsedColor {
-	return [self loadColorPref:kMemUsedColorPref defaultValue:kMemUsedColorDefault];
-} // memUsedColor
-
 - (NSColor *)memActiveColor {
 	return [self loadColorPref:kMemActiveColorPref defaultValue:kMemActiveColorDefault];
 } // memActiveColor
@@ -453,14 +421,6 @@
 - (void)saveMemGraphLength:(int)length {
 	[self saveIntPref:kMemGraphLengthPref value:length];
 } // saveMemGraphLength
-
-- (void)saveMemFreeColor:(NSColor *)color {
-	[self saveColorPref:kMemFreeColorPref value:color];
-} // saveMemFreeColor
-
-- (void)saveMemUsedColor:(NSColor *)color {
-	[self saveColorPref:kMemUsedColorPref value:color];
-} // saveMemUsedColor
 
 - (void)saveMemActiveColor:(NSColor *)color {
 	[self saveColorPref:kMemActiveColorPref value:color];
@@ -563,18 +523,6 @@
 				defaultValue:kNetGraphWidthDefault];
 } // netGraphLength
 
-- (NSColor *)netTransmitColor {
-	return [self loadColorPref:kNetTransmitColorPref defaultValue:kNetTransmitColorDefault];
-} // netTransmitColor
-
-- (NSColor *)netReceiveColor {
-	return [self loadColorPref:kNetReceiveColorPref defaultValue:kNetReceiveColorDefault];
-} // netReceiveColor
-
-- (NSColor *)netInactiveColor {
-	return [self loadColorPref:kNetInactiveColorPref defaultValue:kNetInactiveColorDefault];
-} // netInactiveColor
-
 - (NSString *)netPreferInterface {
 	return [self loadStringPref:kNetPreferInterfacePref defaultValue:kNetPrimaryInterface];
 } // netPreferInterface
@@ -618,18 +566,6 @@
 - (void)saveNetGraphLength:(int)length {
 	[self saveIntPref:kNetGraphLengthPref value:length];
 } // saveNetGraphLength
-
-- (void)saveNetTransmitColor:(NSColor *)color {
-	[self saveColorPref:kNetTransmitColorPref value:color];
-} // saveNetTransmitColor
-
-- (void)saveNetReceiveColor:(NSColor *)color {
-	[self saveColorPref:kNetReceiveColorPref value:color];
-} // saveNetReceiveColor
-
-- (void)saveNetInactiveColor:(NSColor *)color {
-	[self saveColorPref:kNetInactiveColorPref value:color];
-} // saveNetInactiveColor
 
 - (void)saveNetPreferInterface:(NSString *)interface {
 	[self saveStringPref:kNetPreferInterfacePref value:interface];

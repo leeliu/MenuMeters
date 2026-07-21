@@ -1440,11 +1440,12 @@
 }
 -(void)setupColor:(NSNotification *)notification
 {
-	// Cache colors to skip archiver
-        txColor = [self colorByAdjustingForLightDark:[ourPrefs netTransmitColor]];
-        rxColor = [self colorByAdjustingForLightDark:[ourPrefs netReceiveColor]];
-        inactiveColor = [self colorByAdjustingForLightDark:[ourPrefs netInactiveColor]];
-
+	// All colors adapt to the menu bar appearance automatically: receive is the
+	// full-contrast text color; transmit and inactive are the dimmer secondary
+	// label (a visible grey on both light and dark bars).
+        rxColor = [NSColor textColor];
+        txColor = [NSColor secondaryLabelColor];
+        inactiveColor = [NSColor secondaryLabelColor];
 }
 - (void)configFromPrefs:(NSNotification *)notification {
 #ifdef ELCAPITAN

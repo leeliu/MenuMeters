@@ -64,8 +64,6 @@
 #define kMemPressurePref				@"MemPressure"
 #define kMemPageIndicatorPref				@"MemPagingIndicator"
 #define kMemGraphLengthPref					@"MemGraphLength"
-#define kMemFreeColorPref					@"MemFreeColor"
-#define kMemUsedColorPref					@"MemUsedColor"
 #define kMemActiveColorPref					@"MemActiveColor"
 #define kMemInactiveColorPref				@"MemInactiveColor"
 #define kMemWireColorPref					@"MemWireColor"
@@ -102,10 +100,6 @@ enum {
 #define kMemGraphWidthDefault				33
 
 // Colors
-											// Clover
-#define kMemFreeColorDefault				[NSColor colorWithDeviceRed:0.839f green:0.839f blue:0.839f alpha:1.0f]
-											// Cayenne
-#define kMemUsedColorDefault				[NSColor whiteColor]
 											// Lime
 #define kMemActiveColorDefault				[NSColor colorWithDeviceRed:0.5f green:1.0f blue:0.0f alpha:1.0f]
 											// Color between Aluminum and Magnesium
