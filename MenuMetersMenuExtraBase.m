@@ -16,6 +16,11 @@
 
 #define kAppleInterfaceThemeChangedNotification        @"AppleInterfaceThemeChangedNotification"
 
+// Number of consecutive timer ticks a meter must stay hidden before we warn the
+// user, so a single transient off-screen reading during menu-bar reflow doesn't
+// trigger a false alarm.
+#define kHiddenBySystemDebounceTicks 5
+
 @implementation MenuMetersMenuExtraBase
 -(NSColor*)colorByAdjustingForLightDark:(NSColor*)c
 {
@@ -78,8 +83,16 @@
 {
     statusItem.button.image=self.image;
     if(@available(macOS 12,*)){
+        // Debounce: the on-screen check can transiently report hidden during a
+        // single tick (menu-bar reflow as neighbors resize, app/Space switches),
+        // so only alert once the meter has stayed hidden for several ticks.
         if(self.isInstalledButHiddenBySystem){
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"hiddenBySystem" object:nil];
+            consecutiveHiddenTicks++;
+            if(consecutiveHiddenTicks==kHiddenBySystemDebounceTicks){
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"hiddenBySystem" object:nil];
+            }
+        }else{
+            consecutiveHiddenTicks=0;
         }
     }
 /*    NSImage*image=self.image;

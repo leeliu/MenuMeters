@@ -16,6 +16,7 @@
     NSStatusItem* statusItem;
     NSTimer* updateTimer;
     CGFloat menuWidth;
+    NSInteger consecutiveHiddenTicks;
 }
 -(NSColor*)colorByAdjustingForLightDark:(NSColor*)c;
 - (NSImage*)image;
