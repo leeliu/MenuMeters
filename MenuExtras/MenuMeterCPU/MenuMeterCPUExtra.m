@@ -708,12 +708,11 @@
     // Handle menubar theme changes
     fgMenuThemeColor = self.menuBarTextColor;
 
-    // Hardcoded colors that adapt to the menu bar appearance automatically.
-    // System is the full-contrast text color (white on a dark bar, black on a
-    // light bar); user is the dimmer secondary label, which stays a clearly
-    // visible grey on both. Temperature is a fixed red.
-    systemColor = [NSColor textColor];
-    userColor = [NSColor secondaryLabelColor];
+    // Colors adapt to the menu bar appearance automatically. System uses
+    // labelColor (~85%, the moon's brightness); the dimmer user value is
+    // labelColor at 65% opacity. Temperature is a fixed red.
+    systemColor = [NSColor labelColor];
+    userColor = [[NSColor labelColor] colorWithAlphaComponent:0.65f];
     temperatureColor = [NSColor colorWithDeviceRed:239.0f/255.0f green:23.0f/255.0f blue:30.0f/255.0f alpha:1.0f];
 }
 - (void)configFromPrefs:(NSNotification *)notification {

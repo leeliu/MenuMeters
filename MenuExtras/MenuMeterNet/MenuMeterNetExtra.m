@@ -1440,12 +1440,12 @@
 }
 -(void)setupColor:(NSNotification *)notification
 {
-	// All colors adapt to the menu bar appearance automatically: receive is the
-	// full-contrast text color; transmit and inactive are the dimmer secondary
-	// label (a visible grey on both light and dark bars).
-        rxColor = [NSColor textColor];
-        txColor = [NSColor secondaryLabelColor];
-        inactiveColor = [NSColor secondaryLabelColor];
+	// Receive uses labelColor (~85%, the moon's brightness); transmit and
+	// inactive are labelColor at 65% opacity (dimmer but still legible). All
+	// adapt to the menu bar.
+        rxColor = [NSColor labelColor];
+        txColor = [[NSColor labelColor] colorWithAlphaComponent:0.65f];
+        inactiveColor = [[NSColor labelColor] colorWithAlphaComponent:0.65f];
 }
 - (void)configFromPrefs:(NSNotification *)notification {
 #ifdef ELCAPITAN
