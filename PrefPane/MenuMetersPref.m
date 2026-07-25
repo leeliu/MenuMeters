@@ -224,39 +224,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
 	NSString *itemIdent = [tabViewItem identifier];
 	[self.window.toolbar setSelectedItemIdentifier:itemIdent];
 }
--(void)hiddenBySystem:(NSNotification*)notification
-{
-    NSRunningApplication*app=[[NSWorkspace sharedWorkspace] frontmostApplication];
-    if([app.bundleIdentifier isEqualToString:[NSBundle mainBundle].bundleIdentifier])
-        return;
-    NSArray*array=[[NSUserDefaults standardUserDefaults] objectForKey:@"hiddenArray"];
-    if(!array){
-        array=[NSArray array];
-    }
-    if([array containsObject:app.bundleIdentifier]){
-        return;
-    }
-    if(!hiddenAlertIsShown && !(self.window.visible)){
-        NSAlert*hiddenAlert=[[NSAlert alloc] init];
-        hiddenAlert.alertStyle=NSAlertStyleCritical;
-        hiddenAlert.messageText=@"MenuMeters is hidden due to lack of space";
-        NSString*frontAppName=app.localizedName;
-        hiddenAlert.informativeText=[NSString stringWithFormat:@"It might be hidden because %@ has a long list of menus, or your MacBook has a notch.\nTry reducing the number of CPU cores shown, etc.",frontAppName];
-        [hiddenAlert addButtonWithTitle:NSLocalizedString(kOpenMenuMetersPref, kOpenMenuMetersPref)];
-        [hiddenAlert addButtonWithTitle:[NSString stringWithFormat:@"Ignore this issue when the frontmost app is %@",frontAppName]];
-        hiddenAlertIsShown=YES;
-        NSModalResponse response=[hiddenAlert runModal];
-        if(response==NSAlertFirstButtonReturn){
-            [self.window makeKeyAndOrderFront:self];
-        }else{
-            NSMutableArray*m=[array mutableCopy];
-            [m addObject:app.bundleIdentifier];
-            [[NSUserDefaults standardUserDefaults] setObject:m forKey:@"hiddenArray"];
-        }
-        hiddenAlertIsShown=NO;
-    }
-    
-}
 #ifdef SPARKLE
 -(instancetype)initWithAboutFileName:(NSString*)about andUpdater:(SUUpdater*)updater_
 {
@@ -264,7 +231,6 @@ static void scChangeCallback(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
     updater=updater_;
     [self initCommon:about];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openPrefPane:) name:@"openPref" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hiddenBySystem:) name:@"hiddenBySystem" object:nil];
     return self;
 }
 #else

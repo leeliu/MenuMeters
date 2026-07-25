@@ -16,7 +16,6 @@
     NSStatusItem* statusItem;
     NSTimer* updateTimer;
     CGFloat menuWidth;
-    NSInteger consecutiveHiddenTicks;
 }
 -(NSColor*)colorByAdjustingForLightDark:(NSColor*)c;
 - (NSImage*)image;
@@ -30,7 +29,6 @@
 - (void)addStandardMenuEntriesTo:(NSMenu*)extraMenu;
 - (void)setupAppearance;
 - (BOOL)isDark;
-- (BOOL)isInstalledButHiddenBySystem;
 - (CGFloat)height;
 - (CGFloat)imageHeight;
 - (BOOL)renderImage;

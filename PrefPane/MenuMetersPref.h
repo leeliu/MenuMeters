@@ -124,7 +124,6 @@ NSWindowController<NSWindowDelegate, NSToolbarDelegate, NSTabViewDelegate>
 	IBOutlet NSTextField			*netMaxProcessCountLabel;
     __weak IBOutlet NSPopUpButton *updateIntervalButton;
     IBOutlet NSView					*sparkleUIContainer;
-    BOOL hiddenAlertIsShown;
 } // MenuMetersPref
 
 // Pref pane standard methods

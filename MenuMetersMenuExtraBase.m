@@ -16,11 +16,6 @@
 
 #define kAppleInterfaceThemeChangedNotification        @"AppleInterfaceThemeChangedNotification"
 
-// Number of consecutive timer ticks a meter must stay hidden before we warn the
-// user, so a single transient off-screen reading during menu-bar reflow doesn't
-// trigger a false alarm.
-#define kHiddenBySystemDebounceTicks 5
-
 @implementation MenuMetersMenuExtraBase
 -(NSColor*)colorByAdjustingForLightDark:(NSColor*)c
 {
@@ -82,19 +77,6 @@
 -(void)timerFired:(id)notused
 {
     statusItem.button.image=self.image;
-    if(@available(macOS 12,*)){
-        // Debounce: the on-screen check can transiently report hidden during a
-        // single tick (menu-bar reflow as neighbors resize, app/Space switches),
-        // so only alert once the meter has stayed hidden for several ticks.
-        if(self.isInstalledButHiddenBySystem){
-            consecutiveHiddenTicks++;
-            if(consecutiveHiddenTicks==kHiddenBySystemDebounceTicks){
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"hiddenBySystem" object:nil];
-            }
-        }else{
-            consecutiveHiddenTicks=0;
-        }
-    }
 /*    NSImage*image=self.image;
     NSImage*canvas=[NSImage imageWithSize:image.size flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
         [[[NSColor systemGrayColor] colorWithAlphaComponent:.3] setFill];
@@ -260,20 +242,6 @@
         isDark = YES;
     }
     return isDark;
-}
--(BOOL)isInstalledButHiddenBySystem
-{
-    NSWindow*window=statusItem.button.window;
-    if(!window){
-        return NO;
-    }
-    NSInteger windowID=window.windowNumber;
-    NSArray*onScreenWindows=CFBridgingRelease(CGWindowListCreate(kCGWindowListOptionOnScreenOnly, kCGNullWindowID));
-    for(id x in onScreenWindows){
-        if(windowID==(NSInteger)x)
-            return NO;
-    }
-    return YES;
 }
 -(NSColor*)menuBarTextColor
 {
