@@ -152,7 +152,8 @@
 	netHistoryData = [NSMutableArray array];
 	netHistoryIntervals = [NSMutableArray array];
 	netTopProcesses = [[MenuMeterNetTopProcesses alloc] init];
-	if (!(netConfig && netStats && pppControl && netHistoryData && netTopProcesses)) {
+	// pppControl is optional: pppconfd no longer exists on newer macOS
+	if (!(netConfig && netStats && netHistoryData && netTopProcesses)) {
 		NSLog(@"MenuMeterNet unable to load data gatherers/controllers. Abort.");
 		return nil;
 	}

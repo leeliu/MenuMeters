@@ -38,12 +38,9 @@
 		return nil;
 	}
 
-	// Establish or connection to the PPP data gatherer
+	// Establish or connection to the PPP data gatherer. Optional: pppconfd no
+	// longer exists on newer macOS, and a nil gatherer just yields no PPP stats.
 	pppGatherer = [MenuMeterNetPPP sharedPPP];
-	if (!pppGatherer) {
-		NSLog(@"MenuMeterNetStats unable to connect to PPP data gatherer. Abort.");
-		return nil;
-	}
 
 	// Prefetch the data first time
 	[self netStatsForInterval:1.0f];
